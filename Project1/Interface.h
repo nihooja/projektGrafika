@@ -10,12 +10,16 @@ class Interface
 	std::string messageF; // plik z wiadomocia
 	std::fstream file;
 	std::string message; //wiadomosc
+	int choice; 
 
 public:
 	
 	char *getImage(); //wczytuje nazwê pliku
 	void viewMenu(); 
 	const char *getMessage();
+	const char *getPassword();
+	int retChoice()const;
+	
 	Interface();
 	~Interface();
 };

@@ -18,8 +18,6 @@ class Image
 	int SCREEN_WIDTH;
 	int SCREEN_HEIGHT;
 
-
-
 public:
 	void createWindow();
 	SDL_Surface *LoadBitMap(char *);
