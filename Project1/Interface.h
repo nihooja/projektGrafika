@@ -1,24 +1,32 @@
-#pragma once
+#pragma warning(disable:4996)
 #include <iostream>
 #include <string>
 #include <fstream>
 #include <cstring>
+//#include <windows.h>
+//#include <tchar.h> 
 
 using namespace std;
 
 class Interface
 {
-	string bitM; // nazwa pliku bmp
-	string messageF; // plik z wiadomoscia
-	string password;
 	fstream file;
+
+	string messageF; // nazwa pliku z wiadomoscia
+	string bitM; // nazwa pliku bmp
 	string message; //wiadomosc
-	int choice;
-	
+	string password; 
+//	string getexepath;
+
+	int choice; // do menu
+	int rep; // do petli while
+
 	// do konwersji ze stringow
 	char *a;
 	char *b;
 	char *c;
+
+//	bool found;
 
 public:
 	
@@ -29,8 +37,10 @@ public:
 	char *GetImage();
 
 	void LookforExtension(string&, string);
-	
+
+//	bool FindBmp(int argc, TCHAR * argv[]);
+
 	Interface();
-	//~Interface();
+	~Interface();
 };
 

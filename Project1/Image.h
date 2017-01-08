@@ -23,5 +23,6 @@ public:
 	SDL_Surface *LoadBitMap(char *);
 	Image(int,int);
 	~Image();
+	Image() {}
 };
 
