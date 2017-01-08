@@ -36,43 +36,14 @@ void Interface::LookforExtension(string &text, string search)
 }
 
 //----------------------------------------
-/*string getexepath()
+string Interface::getPathdir(char* maxpath)
 {
-	char result[MAX_PATH];
-	string q = string(result, GetModuleFileName(NULL, result, MAX_PATH));
-	cout << q;
-	return q;
+	string::size_type pos = string(maxpath).find_last_of("\\/");
+	return string(maxpath).substr(0, pos);
 }
-*/
+
 //----------------------------------------
-/*bool Interface::FindBmp(int argc, TCHAR *argv[])
-{
-
-	WIN32_FIND_DATA FindFileData;
-	HANDLE hFind;
-
-	if (argc != 2)
-	{
-		_tprintf(TEXT("Usage: %s [target_file]\n"), argv[0]);
-		return;
-	}
-
-	_tprintf(TEXT("Target file is %s\n"), argv[1]);
-	hFind = FindFirstFile(argv[1], &FindFileData);
-	if (hFind == INVALID_HANDLE_VALUE)
-	{
-		printf("FindFirstFile failed (%d)\n", GetLastError());
-		return;
-	}
-	else
-	{
-		_tprintf(TEXT("The first file found is %s\n"),
-			FindFileData.cFileName);
-		FindClose(hFind);
-	}
-}*/
-//----------------------------------------
-const char *Interface::GetMessage()
+const char *Interface::getMessage()
 {
 	rep = 0;
 
@@ -129,7 +100,7 @@ const char *Interface::GetMessage()
 }
 
 //----------------------------------------
-const char *Interface::GetPassword()
+const char *Interface::getPassword()
 {
 	rep = 0;
 	while (password == "" && rep < 3)
@@ -155,12 +126,37 @@ const char *Interface::GetPassword()
 }
 
 //----------------------------------------
-char *Interface::GetImage()
+char *Interface::getImage()
 {
-	rep = 0;
+	//adres katalogu z plikami
+	char q[MAX_PATH];
+	string dirpath = getPathdir(q);
+
+	//wyszukiwanie bmp
+	_finddata_t bmpfile;
+
+	if ((found = _findfirst("*.bmp", &bmpfile)) == -1)
+	{
+		cout << "W folderze nie ma zadnych plikow .bmp. Program zakonczy dzialanie." << endl;
+		exit(1);
+	}
+	else
+	{
+		//wypis pierwszego
+		int rep = 1;
+		cout << "Pliki znajdujace sie w katalogu: " << dirpath << " :" << endl;
+		cout << rep << " - " << bmpfile.name << endl;
+		rep++;
+
+		//wypis reszty
+		while (found = _findnext(found, &bmpfile) != -1)
+		{
+			cout << rep << " - " << bmpfile.name << endl;
+			rep++;
+		}
 
 		//Nazwa pliku
-		cout << "Podaj nazwe pliku bmp, w ktorym chcesz ukryc wiadomosc" << endl;
+		cout << endl << "Podaj nazwe pliku, w ktorym chcesz zapisac wiadomosc" << endl;
 		cin >> bitM;
 		cout << endl;
 
@@ -171,6 +167,7 @@ char *Interface::GetImage()
 		std::strcpy(c, bitM.c_str());
 		return c;
 
+	}
 }
 
 //----------------------------------------
@@ -180,7 +177,7 @@ Interface::Interface()
 	messageF = "";
 	message = "";
 	choice = 0;
-//	found = false;
+	found = 0;
 }
 
 //----------------------------------------
@@ -189,4 +186,5 @@ Interface::~Interface()
 	delete[] a;
 	delete[] b;
 	delete[] c;
+	_findclose(found);
 }

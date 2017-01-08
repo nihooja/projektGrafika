@@ -5,10 +5,10 @@
 /*mo¿liwe ¿e bêdzie musia³o zwróciæ jakiœ wskaŸnik na BMP czy coœ*/
 void choice_1(Interface &inter, Image &im, Steganography &steg)
 { 
-	const char *message = inter.GetMessage();
-	const char *password = inter.GetPassword();
-	char *img = inter.GetImage();
-	
+	const char *message = inter.getMessage();
+	const char *password = inter.getPassword();
+	char *img = inter.getImage();
+	system("pause");
 	//wywo³ania Steganography/Image
 	SDL_Surface *bmp = im.LoadBitMap(img);
 
@@ -19,25 +19,25 @@ void choice_2(Interface &inter, Image &im,Steganography &steg)
 { //do przemyœlenia jeszcze dok³adnie
 
 	/*struktura jeszcze do przemyœlenia ofc*/
-	char *img = inter.GetImage();
+	char *img = inter.getImage();
 	SDL_Surface *bmp = im.LoadBitMap(img);
 }
 int main(int argc, char ** argv)
 {
 	
-	Interface interface;
+	Interface interface_0;
 	Image image(640, 480);
 	Steganography steganography;
 
 	//wybranie opcji
-	int choice = interface.ViewMenu(); 
+	int choice = interface_0.ViewMenu(); 
 	
 	//koduje 
 	if (choice == 1)  
-		choice_1(interface, image, steganography);
+		choice_1(interface_0, image, steganography);
 	//dekoduje
 	else if (choice == 2) 
-		choice_2(interface, image, steganography); 
+		choice_2(interface_0, image, steganography); 
 	//wyjscie z programu
 	else
 	{

@@ -2,9 +2,8 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include <cstring>
-//#include <windows.h>
-//#include <tchar.h> 
+#include <windows.h>
+#include <io.h>
 
 using namespace std;
 
@@ -16,29 +15,25 @@ class Interface
 	string bitM; // nazwa pliku bmp
 	string message; //wiadomosc
 	string password; 
-//	string getexepath;
+	string getPathdir(char*);
 
 	int choice; // do menu
 	int rep; // do petli while
-
+	long found; // do wyszukiwania bmp
 	// do konwersji ze stringow
 	char *a;
 	char *b;
 	char *c;
 
-//	bool found;
+	void LookforExtension(string&, string);
 
 public:
 	
 	int ViewMenu();
 	
-	const char *GetPassword();
-	const char *GetMessage();
-	char *GetImage();
-
-	void LookforExtension(string&, string);
-
-//	bool FindBmp(int argc, TCHAR * argv[]);
+	const char *getPassword();
+	const char *getMessage();
+	char *getImage();
 
 	Interface();
 	~Interface();
