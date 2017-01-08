@@ -38,8 +38,9 @@ int main(int argc, char ** argv)
 	
 	int choice = interface.retChoice();  
 	
-	while (choice > 2) { //nie mia³em innego pomys³u na zapêtlenie
-		if (choice == 0)  //jeœli koduje 
+	while (choice != 1 && choice !=2)
+	{
+		if (choice == 1)  //jeœli koduje 
 			choice_1(interface, image, steganography);
 		else if (choice == 2) { //jesli dekoduje 
 			choice_2(interface, image, steganography);
