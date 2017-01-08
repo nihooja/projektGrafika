@@ -4,23 +4,33 @@
 #include <fstream>
 #include <cstring>
 
+using namespace std;
+
 class Interface
 {
-	std::string bitM; // plik bmp
-	std::string messageF; // plik z wiadomocia
-	std::fstream file;
-	std::string message; //wiadomosc
-	int choice; 
+	string bitM; // nazwa pliku bmp
+	string messageF; // plik z wiadomoscia
+	string password;
+	fstream file;
+	string message; //wiadomosc
+	int choice;
+	
+	// do konwersji ze stringow
+	char *a;
+	char *b;
+	char *c;
 
 public:
 	
-	char *getImage(); //wczytuje nazwê pliku
-	void viewMenu(); 
-	const char *getMessage();
-	const char *getPassword();
-	int retChoice()const;
+	int ViewMenu();
+	
+	const char *GetPassword();
+	const char *GetMessage();
+	char *GetImage();
+
+	void LookforExtension(string&, string);
 	
 	Interface();
-	~Interface();
+	//~Interface();
 };
 
