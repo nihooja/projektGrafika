@@ -8,7 +8,6 @@ void choice_1(Interface &inter, Image &im, Steganography &steg)
 	const char *message = inter.getMessage();
 	const char *password = inter.getPassword();
 	char *img = inter.getImage();
-	system("pause");
 	//wywo³ania Steganography/Image
 	SDL_Surface *bmp = im.LoadBitMap(img);
 
@@ -41,7 +40,7 @@ int main(int argc, char ** argv)
 	//wyjscie z programu
 	else
 	{
-		cout << endl << "Program konczy dzialanie";
+		cout << "Program konczy dzialanie." << endl;
 		system("pause");
 		exit(0);
 	}

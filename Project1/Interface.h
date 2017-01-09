@@ -1,10 +1,10 @@
 #pragma warning(disable:4996)
-#include <iostream>
-#include <string>
-#include <fstream>
 #include <windows.h>
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
 #include <io.h>
-
 using namespace std;
 
 class Interface
@@ -15,17 +15,18 @@ class Interface
 	string bitM; // nazwa pliku bmp
 	string message; //wiadomosc
 	string password; 
-	string getPathdir(char*);
+	string getPathdir(char*); //sciezka katalogu projektu
 
+	vector <string> bmps;
 	int choice; // do menu
 	int rep; // do petli while
 	long found; // do wyszukiwania bmp
-	// do konwersji ze stringow
-	char *a;
-	char *b;
-	char *c;
 
-	void LookforExtension(string&, string);
+	char *a; //getmessage
+	char *b; //getpassword
+	char *c; //getimage
+
+	void LookforExtension(string&, string); //dopisywanie rozszerzen
 
 public:
 	

@@ -5,7 +5,7 @@ int Interface::ViewMenu() //wpisywanie nazw plików, na potem
 {
 	rep = 0;
 
-	cout << "======KODOWANIE WIADOMOSCI W BITMAPIE======" << endl;
+	cout << "========KODOWANIE WIADOMOSCI W BITMAPIE========" << endl;
 
 	while (choice != 1 && choice != 2 && choice != 3 && rep < 3)
 	{
@@ -38,6 +38,7 @@ void Interface::LookforExtension(string &text, string search)
 //----------------------------------------
 string Interface::getPathdir(char* maxpath)
 {
+	GetModuleFileName(NULL, maxpath, MAX_PATH);
 	string::size_type pos = string(maxpath).find_last_of("\\/");
 	return string(maxpath).substr(0, pos);
 }
@@ -50,7 +51,7 @@ const char *Interface::getMessage()
 	while (rep < 3)
 	{
 		//nazwa pliku
-		cout << "Podaj nazwe pliku z wiadomoscia" << endl;
+		cout << "Podaj nazwe pliku z wiadomoscia:" << endl;
 		cin >> messageF;
 		cout << endl;
 
@@ -79,8 +80,8 @@ const char *Interface::getMessage()
 			}
 			//jesli nie jest pusty, konwersja do char
 			else
-			{	
-				char *a = new char[message.length() + 1];
+			{
+				a = new char[message.length() + 1];
 				strcpy(a, message.c_str());
 				return a;
 			}
@@ -93,7 +94,7 @@ const char *Interface::getMessage()
 	//jesli nie znalazl do konca
 	if (message == "" && rep == 3)
 	{
-		cerr << ("Blad otwierania pliku. Program zakonczy dzialanie.") << endl;
+		cerr << "Blad otwierania pliku. Program zakonczy dzialanie." << endl;
 		system("pause");
 		exit(1);
 	}
@@ -106,7 +107,7 @@ const char *Interface::getPassword()
 	while (password == "" && rep < 3)
 	{
 		cout << endl;
-		cout << "Podaj haslo do kodowania" << endl;
+		cout << "Podaj haslo do kodowania:" << endl;
 		cin >> password;
 		rep++;
 	}
@@ -114,13 +115,13 @@ const char *Interface::getPassword()
 	//jesli ktos bardzo nie chce wpisac hasla
 	if (password == "" && rep == 3)
 	{
-		cerr << ("Blad wpisywania hasla. Program zakonczy dzialanie.") << endl;
+		cerr << "Blad wpisywania hasla. Program zakonczy dzialanie." << endl;
 		system("pause");
 		exit(1);
 	}
 
 	//konwersja hasla do char
-	char *b = new char[password.length()+1];
+	b = new char[password.length() + 1];
 	strcpy(b, password.c_str());
 	return b;
 }
@@ -137,47 +138,68 @@ char *Interface::getImage()
 
 	if ((found = _findfirst("*.bmp", &bmpfile)) == -1)
 	{
-		cout << "W folderze nie ma zadnych plikow .bmp. Program zakonczy dzialanie." << endl;
+		cerr << "W folderze nie ma zadnych plikow .bmp. Program zakonczy dzialanie." << endl;
+		system("pause");
 		exit(1);
 	}
+
+	//jesli jest przynajmniej jeden, wchodzi do wektora
 	else
 	{
 		//wypis pierwszego
-		int rep = 1;
-		cout << "Pliki znajdujace sie w katalogu: " << dirpath << " :" << endl;
-		cout << rep << " - " << bmpfile.name << endl;
+		bmps.push_back(bmpfile.name);
+
+		cout << "Pliki znajdujace sie w katalogu: " << endl << dirpath << " :" << endl;
+		cout << bmps.size() << " - " << bmpfile.name << endl;
 		rep++;
 
 		//wypis reszty
 		while (found = _findnext(found, &bmpfile) != -1)
 		{
-			cout << rep << " - " << bmpfile.name << endl;
-			rep++;
+			bmps.push_back(bmpfile.name);
+			cout << bmps.size() << " - " << bmpfile.name << endl;
 		}
 
-		//Nazwa pliku
-		cout << endl << "Podaj nazwe pliku, w ktorym chcesz zapisac wiadomosc" << endl;
-		cin >> bitM;
-		cout << endl;
+		rep = 0;
+		while (rep < 3)
+		{
+			//Nazwa pliku
+			if(choice == 1)
+				cout << endl << "Podaj nazwe pliku, w ktorym chcesz zapisac wiadomosc." << endl;
+			else if(choice == 2)
+				cout << endl << "Podaj nazwe pliku, z ktorego chcesz odkodowac wiadomosc." << endl;
+			cin >> bitM;
+			cout << endl;
 
-		//ewentualne dodanie rozszerzenia
-		LookforExtension(bitM, ".bmp");
+			//ewentualne dodanie rozszerzenia
+			LookforExtension(bitM, ".bmp");
 
-		char *c = new char[bitM.length() + 1];
-		std::strcpy(c, bitM.c_str());
-		return c;
+			//sprawdzanie czy taki plik znajduje sie w folderze
+			for (int i = 0; i < bmps.size(); i++)
+			{
+				//jesli jest
+				if(bmps[i] == bitM)
+				{
+					c = new char[bitM.length() + 1];
+					strcpy(c, bitM.c_str());
+					return c;
+				}
+			}
+			rep++;
+		}
+		if(rep == 3)
+		{
+			cerr << "Nie wskazales zadnego z plikow .bmp. Program zakonczy dzialanie." << endl;
+			system("pause");
+			exit(1);
+		}
 
 	}
 }
 
 //----------------------------------------
-Interface::Interface()
+Interface::Interface() :bitM(""), messageF(""), message(""), choice(0), found(0)
 {
-	bitM = "";
-	messageF = "";
-	message = "";
-	choice = 0;
-	found = 0;
 }
 
 //----------------------------------------
@@ -187,4 +209,6 @@ Interface::~Interface()
 	delete[] b;
 	delete[] c;
 	_findclose(found);
+	file.close();
+
 }
