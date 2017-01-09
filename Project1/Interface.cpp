@@ -1,7 +1,71 @@
 #include "Interface.h"
 
 //----------------------------------------
-int Interface::ViewMenu() //wpisywanie nazw plików, na potem
+//Wypelnia wektor plikami o danym rozszerzeniu i je wypisuje
+void Interface::FilesList(char *extension)
+{
+	//czyszczenie zawartosci wektora
+	list.clear();
+
+	//adres katalogu z plikami
+	char q[MAX_PATH];
+	string dirpath = getPathdir(q);
+
+	//wyszukiwanie plikow w katalogu projektu z danym rozszerzeniem
+	_finddata_t found_file;
+
+	//jesli nie ma zadnych
+	if ((found = _findfirst(extension, &found_file)) == -1)
+	{
+		cerr << "W folderze: " << dirpath << " nie ma zadnych plikow " << extension << ". Program zakonczy dzialanie." << endl;
+		system("pause");
+		exit(1);
+	}
+
+	//jesli jest przynajmniej jeden, dodaje sie do wektora
+	else
+	{
+		//wypis pierwszego
+		list.push_back(found_file.name);
+
+		cout << "Pliki znajdujace sie w katalogu: " << endl << dirpath << " :" << endl;
+		cout << list.size() << " - " << found_file.name << endl;
+		rep++;
+
+		//wypis i dodanie reszty (jesli istnieje)
+		while (found = _findnext(found, &found_file) != -1)
+		{
+			list.push_back(found_file.name);
+			cout << list.size() << " - " << found_file.name << endl;
+		}
+	}
+}
+
+//----------------------------------------
+//Po wprowadzeniu nazwy pliku sprawdza, czy zawiera ona rozszerzenie
+void Interface::LookforExtension(string &text, string search)
+{
+	size_t found = text.find(search);
+
+	if (found == string::npos) // jesli nie ma -> dodaje
+	{
+		text += search;
+	}
+	else return;
+}
+
+//----------------------------------------
+//Zwraca adres katalogu z programem
+string Interface::getPathdir(char* maxpath)
+{
+	GetModuleFileName(NULL, maxpath, MAX_PATH);
+	string::size_type pos = string(maxpath).find_last_of("\\/");
+	return string(maxpath).substr(0, pos);
+}
+
+//----------------------------------------
+//Menu zwracajace wybrana opcje
+int Interface::ViewMenu()
 {
 	rep = 0;
 
@@ -17,6 +81,7 @@ int Interface::ViewMenu() //wpisywanie nazw plików, na potem
 		rep++;
 	}
 
+	//limit powtorzen
 	if (rep == 3)
 		choice = 3;
 
@@ -24,29 +89,13 @@ int Interface::ViewMenu() //wpisywanie nazw plików, na potem
 }
 
 //----------------------------------------
-void Interface::LookforExtension(string &text, string search)
-{
-	size_t found = text.find(search);
-
-	if (found == string::npos) // nie wpisali
-	{
-		text += search;
-	}
-	else return;
-}
-
-//----------------------------------------
-string Interface::getPathdir(char* maxpath)
-{
-	GetModuleFileName(NULL, maxpath, MAX_PATH);
-	string::size_type pos = string(maxpath).find_last_of("\\/");
-	return string(maxpath).substr(0, pos);
-}
-
-//----------------------------------------
+//Zwraca wiadomosc
 const char *Interface::getMessage()
 {
 	rep = 0;
+
+	//wyszukiwanie txt w folderze
+	FilesList("*.txt");
 
 	while (rep < 3)
 	{
@@ -101,9 +150,11 @@ const char *Interface::getMessage()
 }
 
 //----------------------------------------
+//Zwraca haslo
 const char *Interface::getPassword()
 {
 	rep = 0;
+
 	while (password == "" && rep < 3)
 	{
 		cout << endl;
@@ -112,69 +163,38 @@ const char *Interface::getPassword()
 		rep++;
 	}
 
+	//konwersja hasla do char
+	if (password != "")
+	{
+		b = new char[password.length() + 1];
+		strcpy(b, password.c_str());
+		return b;
+	}
+
 	//jesli ktos bardzo nie chce wpisac hasla
-	if (password == "" && rep == 3)
+	else
 	{
 		cerr << "Blad wpisywania hasla. Program zakonczy dzialanie." << endl;
 		system("pause");
 		exit(1);
 	}
-
-	//konwersja hasla do char
-	b = new char[password.length() + 1];
-	strcpy(b, password.c_str());
-	return b;
 }
 
 //----------------------------------------
-void Interface::FilesList(char *extension)
-{
-	//adres katalogu z plikami
-	char q[MAX_PATH];
-	string dirpath = getPathdir(q); 
-	
-	//wyszukiwanie plikow w katalogu projektu z danym rozszerzeniem
-	_finddata_t bmpfile;
-
-	//jesli nie ma zadnych
-	if ((found = _findfirst(extension, &bmpfile)) == -1)
-	{
-		cerr << "W folderze nie ma zadnych plikow " << extension << " Program zakonczy dzialanie." << endl;
-		system("pause");
-		exit(1);
-	}
-
-	//jesli jest przynajmniej jeden, dodaje sie do wektora
-	else
-	{
-		//wypis pierwszego
-		bmps.push_back(bmpfile.name);
-
-		cout << "Pliki znajdujace sie w katalogu: " << endl << dirpath << " :" << endl;
-		cout << bmps.size() << " - " << bmpfile.name << endl;
-		rep++;
-
-		//wypis i dodanie reszty (jesli istnieje)
-		while (found = _findnext(found, &bmpfile) != -1)
-		{
-			bmps.push_back(bmpfile.name);
-			cout << bmps.size() << " - " << bmpfile.name << endl;
-		}
-	}
-}
-
+//Zwraca nazwe pliku bmp w ktorym zostanie zakodowana wiadomosc
 char *Interface::getImage()
 {
+	rep = 0;
+
 	//wyszukiwanie bmp w folderze
 	FilesList("*.bmp");
 
-	rep = 0;
 	while (rep < 3)
 	{
 		//Nazwa pliku
-		if(choice == 1)
+		if (choice == 1)
 			cout << endl << "Podaj nazwe pliku, w ktorym chcesz zapisac wiadomosc." << endl;
-		else if(choice == 2)
+		else if (choice == 2)
 			cout << endl << "Podaj nazwe pliku, z ktorego chcesz odkodowac wiadomosc." << endl;
 		cin >> bitM;
 		cout << endl;
@@ -183,32 +203,30 @@ char *Interface::getImage()
 		LookforExtension(bitM, ".bmp");
 
 		//sprawdzanie czy taki plik znajduje sie w folderze
-		for (int i = 0; i < bmps.size(); i++)
+		for (int i = 0; i < list.size(); i++)
 		{
 			//jesli jest
-			if(bmps[i] == bitM)
+			if (list[i] == bitM)
 			{
 				c = new char[bitM.length() + 1];
 				strcpy(c, bitM.c_str());
-				return c;				
+				return c;
 			}
 		}
 		rep++;
 	}
-	
-	if(rep == 3)
+	// limit powtorzen
+	if (rep == 3)
 	{
 		cerr << "Nie wskazales zadnego z plikow .bmp. Program zakonczy dzialanie." << endl;
 		system("pause");
 		exit(1);
 	}
-	
 }
 
 //----------------------------------------
 Interface::Interface() :bitM(""), messageF(""), message(""), choice(0), found(0)
-{
-}
+{}
 
 //----------------------------------------
 Interface::~Interface()
@@ -218,5 +236,4 @@ Interface::~Interface()
 	delete[] c;
 	_findclose(found);
 	file.close();
-
 }

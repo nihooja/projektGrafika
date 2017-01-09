@@ -17,17 +17,18 @@ class Interface
 	string password; 
 	string getPathdir(char*); //sciezka katalogu projektu
 
-	vector <string> bmps;
+	vector <string> list; // tablica plikow w folderze
+
 	int choice; // do menu
-	int rep; // do petli while
-	long found; // do wyszukiwania bmp
+	int rep; // do prob wpisywania danych
+	long found; // do wyszukiwania plikow w folderze 
 
 	char *a; //getmessage
 	char *b; //getpassword
 	char *c; //getimage
 
 	void LookforExtension(string&, string); //dopisywanie rozszerzen
-	void FilesList(char*);
+	void FilesList(char*); // robi liste plikow w folderze
 
 public:
 	
