@@ -127,23 +127,24 @@ const char *Interface::getPassword()
 }
 
 //----------------------------------------
-char *Interface::getImage()
+void Interface::FilesList(char *extension)
 {
 	//adres katalogu z plikami
 	char q[MAX_PATH];
-	string dirpath = getPathdir(q);
-
-	//wyszukiwanie bmp
+	string dirpath = getPathdir(q); 
+	
+	//wyszukiwanie plikow w katalogu projektu z danym rozszerzeniem
 	_finddata_t bmpfile;
 
-	if ((found = _findfirst("*.bmp", &bmpfile)) == -1)
+	//jesli nie ma zadnych
+	if ((found = _findfirst(extension, &bmpfile)) == -1)
 	{
-		cerr << "W folderze nie ma zadnych plikow .bmp. Program zakonczy dzialanie." << endl;
+		cerr << "W folderze nie ma zadnych plikow " << extension << " Program zakonczy dzialanie." << endl;
 		system("pause");
 		exit(1);
 	}
 
-	//jesli jest przynajmniej jeden, wchodzi do wektora
+	//jesli jest przynajmniej jeden, dodaje sie do wektora
 	else
 	{
 		//wypis pierwszego
@@ -153,48 +154,55 @@ char *Interface::getImage()
 		cout << bmps.size() << " - " << bmpfile.name << endl;
 		rep++;
 
-		//wypis reszty
+		//wypis i dodanie reszty (jesli istnieje)
 		while (found = _findnext(found, &bmpfile) != -1)
 		{
 			bmps.push_back(bmpfile.name);
 			cout << bmps.size() << " - " << bmpfile.name << endl;
 		}
-
-		rep = 0;
-		while (rep < 3)
-		{
-			//Nazwa pliku
-			if(choice == 1)
-				cout << endl << "Podaj nazwe pliku, w ktorym chcesz zapisac wiadomosc." << endl;
-			else if(choice == 2)
-				cout << endl << "Podaj nazwe pliku, z ktorego chcesz odkodowac wiadomosc." << endl;
-			cin >> bitM;
-			cout << endl;
-
-			//ewentualne dodanie rozszerzenia
-			LookforExtension(bitM, ".bmp");
-
-			//sprawdzanie czy taki plik znajduje sie w folderze
-			for (int i = 0; i < bmps.size(); i++)
-			{
-				//jesli jest
-				if(bmps[i] == bitM)
-				{
-					c = new char[bitM.length() + 1];
-					strcpy(c, bitM.c_str());
-					return c;
-				}
-			}
-			rep++;
-		}
-		if(rep == 3)
-		{
-			cerr << "Nie wskazales zadnego z plikow .bmp. Program zakonczy dzialanie." << endl;
-			system("pause");
-			exit(1);
-		}
-
 	}
+}
+
+char *Interface::getImage()
+{
+	//wyszukiwanie bmp w folderze
+	FilesList("*.bmp");
+
+	rep = 0;
+	while (rep < 3)
+	{
+		//Nazwa pliku
+		if(choice == 1)
+			cout << endl << "Podaj nazwe pliku, w ktorym chcesz zapisac wiadomosc." << endl;
+		else if(choice == 2)
+			cout << endl << "Podaj nazwe pliku, z ktorego chcesz odkodowac wiadomosc." << endl;
+		cin >> bitM;
+		cout << endl;
+
+		//ewentualne dodanie rozszerzenia
+		LookforExtension(bitM, ".bmp");
+
+		//sprawdzanie czy taki plik znajduje sie w folderze
+		for (int i = 0; i < bmps.size(); i++)
+		{
+			//jesli jest
+			if(bmps[i] == bitM)
+			{
+				c = new char[bitM.length() + 1];
+				strcpy(c, bitM.c_str());
+				return c;				
+			}
+		}
+		rep++;
+	}
+	
+	if(rep == 3)
+	{
+		cerr << "Nie wskazales zadnego z plikow .bmp. Program zakonczy dzialanie." << endl;
+		system("pause");
+		exit(1);
+	}
+	
 }
 
 //----------------------------------------

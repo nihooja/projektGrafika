@@ -27,6 +27,7 @@ class Interface
 	char *c; //getimage
 
 	void LookforExtension(string&, string); //dopisywanie rozszerzen
+	void FilesList(char*);
 
 public:
 	
