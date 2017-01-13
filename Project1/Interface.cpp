@@ -2,7 +2,7 @@
 
 //----------------------------------------
 //Wypelnia wektor plikami o danym rozszerzeniu i je wypisuje
-void Interface::FilesList(char *extension)
+void Interface::filesList(char *extension)
 {
 	//czyszczenie zawartosci wektora
 	list.clear();
@@ -43,7 +43,7 @@ void Interface::FilesList(char *extension)
 
 //----------------------------------------
 //Po wprowadzeniu nazwy pliku sprawdza, czy zawiera ona rozszerzenie
-void Interface::LookforExtension(string &text, string search)
+void Interface::lookforExtension(string &text, string search)
 {
 	size_t found = text.find(search);
 
@@ -65,7 +65,7 @@ string Interface::getPathdir(char* maxpath)
 
 //----------------------------------------
 //Menu zwracajace wybrana opcje
-int Interface::ViewMenu()
+int Interface::viewMenu()
 {
 	rep = 0;
 
@@ -95,7 +95,7 @@ const char *Interface::getMessage()
 	rep = 0;
 
 	//wyszukiwanie txt w folderze
-	FilesList("*.txt");
+	filesList("*.txt");
 
 	while (rep < 3)
 	{
@@ -105,7 +105,7 @@ const char *Interface::getMessage()
 		cout << endl;
 
 		//ewentualne dodanie rozszerzenia
-		LookforExtension(messageF, ".txt");
+		lookforExtension(messageF, ".txt");
 
 		//otwieranie pliku
 		file.open(messageF);
@@ -130,9 +130,9 @@ const char *Interface::getMessage()
 			//jesli nie jest pusty, konwersja do char
 			else
 			{
-				a = new char[message.length() + 1];
-				strcpy(a, message.c_str());
-				return a;
+				g_message = new char[message.length() + 1];
+				strcpy(g_message, message.c_str());
+				return g_message;
 			}
 		}
 		//jesli nie ma takiego pliku
@@ -166,9 +166,9 @@ const char *Interface::getPassword()
 	//konwersja hasla do char
 	if (password != "")
 	{
-		b = new char[password.length() + 1];
-		strcpy(b, password.c_str());
-		return b;
+		g_pass = new char[password.length() + 1];
+		strcpy(g_pass, password.c_str());
+		return g_pass;
 	}
 
 	//jesli ktos bardzo nie chce wpisac hasla
@@ -187,7 +187,7 @@ char *Interface::getImage()
 	rep = 0;
 
 	//wyszukiwanie bmp w folderze
-	FilesList("*.bmp");
+	filesList("*.bmp");
 
 	while (rep < 3)
 	{
@@ -200,7 +200,7 @@ char *Interface::getImage()
 		cout << endl;
 
 		//ewentualne dodanie rozszerzenia
-		LookforExtension(bitM, ".bmp");
+		lookforExtension(bitM, ".bmp");
 
 		//sprawdzanie czy taki plik znajduje sie w folderze
 		for (int i = 0; i < list.size(); i++)
@@ -208,9 +208,9 @@ char *Interface::getImage()
 			//jesli jest
 			if (list[i] == bitM)
 			{
-				c = new char[bitM.length() + 1];
-				strcpy(c, bitM.c_str());
-				return c;
+				g_img = new char[bitM.length() + 1];
+				strcpy(g_img, bitM.c_str());
+				return g_img;
 			}
 		}
 		rep++;
@@ -231,9 +231,9 @@ Interface::Interface() :bitM(""), messageF(""), message(""), choice(0), found(0)
 //----------------------------------------
 Interface::~Interface()
 {
-	delete[] a;
-	delete[] b;
-	delete[] c;
+	delete[] g_message;
+	delete[] g_pass;
+	delete[] g_img;
 	_findclose(found);
 	file.close();
 }

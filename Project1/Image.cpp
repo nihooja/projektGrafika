@@ -3,14 +3,14 @@
 
 void Image::createWindow()
 {
-	// Create window
+	
 	window = SDL_CreateWindow("Project", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 	if (!window){
 		std::cerr << "SDL_CreateWindow() Failed: " << SDL_GetError() << std::endl;
 		exit(1);
 	}
 	else {
-		//Get window surface
+		
 		screenSurface = SDL_GetWindowSurface(window);
 	}
 }
@@ -18,7 +18,6 @@ void Image::createWindow()
 SDL_Surface *Image::LoadBitMap(char *path) {
 
 	createWindow(); 
-	
 	image = SDL_LoadBMP(path);
 	if (!image){
 		std::cerr << "SDL_LoadBMP() Failed: " << SDL_GetError() << std::endl;
@@ -42,7 +41,6 @@ Image::Image(int weight,int height):
 	}
 	
 }
-
 
 Image::~Image(){
 

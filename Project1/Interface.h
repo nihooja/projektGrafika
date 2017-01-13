@@ -23,17 +23,16 @@ class Interface
 	int rep; // do prob wpisywania danych
 	long found; // do wyszukiwania plikow w folderze 
 
-	char *a; //getmessage
-	char *b; //getpassword
-	char *c; //getimage
+	char *g_message; //getmessage
+	char *g_pass; //getpassword
+	char *g_img; //getimage
 
-	void LookforExtension(string&, string); //dopisywanie rozszerzen
-	void FilesList(char*); // robi liste plikow w folderze
+	void lookforExtension(string&, string); //dopisywanie rozszerzen
+	void filesList(char*); // robi liste plikow w folderze
 
 public:
 	
-	int ViewMenu();
-	
+	int viewMenu();
 	const char *getPassword();
 	const char *getMessage();
 	char *getImage();
