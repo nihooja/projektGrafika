@@ -40,7 +40,7 @@ int main(int argc, char ** argv)
 	//wyjscie z programu
 	else
 	{
-		cout << "Program konczy dzialanie." << endl;
+		std::cout << "Program konczy dzialanie." << std::endl;
 		system("pause");
 		exit(0);
 	}

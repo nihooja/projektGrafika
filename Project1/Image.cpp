@@ -30,6 +30,73 @@ SDL_Surface *Image::LoadBitMap(char *path) {
 	return image;
 }
 
+SDL_Color Image::getPixel(int x,int y)
+{
+	
+		SDL_Color color;
+		Uint32 col = 0;
+		if ((x >= 0) && (x<SCREEN_WIDTH) && (y >= 0) && (y<SCREEN_HEIGHT)) {
+			//determine position
+			char* pPosition = (char*)image->pixels;
+			//offset by y
+			pPosition += (image->pitch*y);
+			//offset by x
+			pPosition += (image->format->BytesPerPixel*x);
+			//copy pixel data
+			memcpy(&col, pPosition, image->format->BytesPerPixel);
+			//convert color
+			SDL_GetRGB(col, image->format, &color.r, &color.g, &color.b);
+		}
+		return (color);
+}
+
+void Image::setPixel(int x, int y, Uint8 R, Uint8 G, Uint8 B)
+{
+	if ((x >= 0) && (x<SCREEN_WIDTH) && (y >= 0) && (y<SCREEN_HEIGHT))
+	{
+		/* Zamieniamy poszczególne sk?adowe koloru na format koloru pixela */
+		Uint32 pixel = SDL_MapRGB(image->format, R, G, B);
+
+		/* Pobieramy informacji ile bajtów zajmuje jeden pixel */
+		int bpp = image->format->BytesPerPixel;
+
+		/* Obliczamy adres pixela */
+		Uint8 *p = (Uint8 *)image->pixels + y * image->pitch + x * bpp;
+
+		/* Ustawiamy warto?? pixela, w zale?no?ci od formatu powierzchni*/
+		switch (bpp)
+		{
+		case 1: //8-bit
+			*p = pixel;
+			break;
+
+		case 2: //16-bit
+			*(Uint16 *)p = pixel;
+			break;
+
+		case 3: //24-bit
+			if (SDL_BYTEORDER == SDL_BIG_ENDIAN) {
+				p[0] = (pixel >> 16) & 0xff;
+				p[1] = (pixel >> 8) & 0xff;
+				p[2] = pixel & 0xff;
+			}
+			else {
+				p[0] = pixel & 0xff;
+				p[1] = (pixel >> 8) & 0xff;
+				p[2] = (pixel >> 16) & 0xff;
+			}
+			break;
+
+		case 4: //32-bit
+			*(Uint32 *)p = pixel;
+			break;
+
+		}
+		/* update the screen (aka double buffering) */
+	}
+}
+
+
 
 
 Image::Image(int weight,int height):
@@ -41,7 +108,6 @@ Image::Image(int weight,int height):
 	}
 	
 }
-
 Image::~Image(){
 
 	//Deallocate surface

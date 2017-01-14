@@ -4,12 +4,12 @@
 //Wypelnia wektor plikami o danym rozszerzeniu i je wypisuje
 void Interface::filesList(char *extension)
 {
-	//czyszczenie zawartosci wektora
+	
 	list.clear();
 
 	//adres katalogu z plikami
 	char q[MAX_PATH];
-	string dirpath = getPathdir(q);
+	std::string dirpath = getPathdir(q);
 
 	//wyszukiwanie plikow w katalogu projektu z danym rozszerzeniem
 	_finddata_t found_file;
@@ -17,7 +17,7 @@ void Interface::filesList(char *extension)
 	//jesli nie ma zadnych
 	if ((found = _findfirst(extension, &found_file)) == -1)
 	{
-		cerr << "W folderze: " << dirpath << " nie ma zadnych plikow " << extension << ". Program zakonczy dzialanie." << endl;
+		std::cerr << "W folderze: " << dirpath << " nie ma zadnych plikow " << extension << ". Program zakonczy dzialanie." << std::endl;
 		system("pause");
 		exit(1);
 	}
@@ -28,26 +28,26 @@ void Interface::filesList(char *extension)
 		//wypis pierwszego
 		list.push_back(found_file.name);
 
-		cout << "Pliki znajdujace sie w katalogu: " << endl << dirpath << " :" << endl;
-		cout << list.size() << " - " << found_file.name << endl;
+		std::cout << "Pliki znajdujace sie w katalogu: " << std::endl << dirpath << std::endl;
+		std::cout << /*list.size() << " - " <<*/ found_file.name << std::endl;
 		rep++;
 
 		//wypis i dodanie reszty (jesli istnieje)
 		while (found = _findnext(found, &found_file) != -1)
 		{
 			list.push_back(found_file.name);
-			cout << list.size() << " - " << found_file.name << endl;
+			std::cout << /*list.size() << " - " << */found_file.name << std::endl;
 		}
 	}
 }
 
 //----------------------------------------
 //Po wprowadzeniu nazwy pliku sprawdza, czy zawiera ona rozszerzenie
-void Interface::lookforExtension(string &text, string search)
+void Interface::lookforExtension(std::string &text, std::string search)
 {
 	size_t found = text.find(search);
 
-	if (found == string::npos) // jesli nie ma -> dodaje
+	if (found == std::string::npos) // jesli nie ma -> dodaje
 	{
 		text += search;
 	}
@@ -56,11 +56,11 @@ void Interface::lookforExtension(string &text, string search)
 
 //----------------------------------------
 //Zwraca adres katalogu z programem
-string Interface::getPathdir(char* maxpath)
+std::string Interface::getPathdir(char* maxpath)
 {
 	GetModuleFileName(NULL, maxpath, MAX_PATH);
-	string::size_type pos = string(maxpath).find_last_of("\\/");
-	return string(maxpath).substr(0, pos);
+	std::string::size_type pos = std::string(maxpath).find_last_of("\\/");
+	return std::string(maxpath).substr(0, pos);
 }
 
 //----------------------------------------
@@ -69,15 +69,15 @@ int Interface::viewMenu()
 {
 	rep = 0;
 
-	cout << "========KODOWANIE WIADOMOSCI W BITMAPIE========" << endl;
+	std::cout << "========KODOWANIE WIADOMOSCI W BITMAPIE========" << std::endl;
 
 	while (choice != 1 && choice != 2 && choice != 3 && rep < 3)
 	{
-		cout << "Wybierz opcje?" << endl;
-		cout << "1 - zakodowac wiadomosc" << endl;
-		cout << "2 - odkodowac wiadomosc" << endl;
-		cout << "3 - wyjscie" << endl;
-		cin >> choice;
+		std::cout << "Wybierz opcje?" << std::endl;
+		std::cout << "1 - zakodowac wiadomosc" << std::endl;
+		std::cout << "2 - odkodowac wiadomosc" <<std::endl;
+		std::cout << "3 - wyjscie" << std::endl;
+		std::cout << "->"; std::cin >> choice;
 		rep++;
 	}
 
@@ -93,25 +93,23 @@ int Interface::viewMenu()
 const char *Interface::getMessage()
 {
 	rep = 0;
-
 	//wyszukiwanie txt w folderze
-	filesList("*.txt");
+	this->filesList("*.txt");
 
 	while (rep < 3)
 	{
-		//nazwa pliku
-		cout << "Podaj nazwe pliku z wiadomoscia:" << endl;
-		cin >> messageF;
-		cout << endl;
+		
+		std::cout << "Podaj nazwe pliku z wiadomoscia:" << std::endl;
+		std::cout << "->"; std::cin >> messageF;
+		std::cout << std::endl;
 
-		//ewentualne dodanie rozszerzenia
-		lookforExtension(messageF, ".txt");
+		
+		this->lookforExtension(messageF, ".txt");
 
-		//otwieranie pliku
 		file.open(messageF);
 		if (file)
 		{
-			string msg;
+			std::string msg;
 
 			//odczyt z pliku
 			while (file >> message)
@@ -124,7 +122,7 @@ const char *Interface::getMessage()
 			//jesli pusty
 			if (message == "")
 			{
-				cerr << ("Blad! Plik jest pusty!") << endl;
+				std::cerr << ("Blad! Plik jest pusty!") << std::endl;
 				rep++;
 			}
 			//jesli nie jest pusty, konwersja do char
@@ -139,11 +137,10 @@ const char *Interface::getMessage()
 		else
 			rep++;
 	}
-
 	//jesli nie znalazl do konca
 	if (message == "" && rep == 3)
 	{
-		cerr << "Blad otwierania pliku. Program zakonczy dzialanie." << endl;
+		std::cerr << "Blad otwierania pliku. Program zakonczy dzialanie." << std::endl;
 		system("pause");
 		exit(1);
 	}
@@ -157,9 +154,9 @@ const char *Interface::getPassword()
 
 	while (password == "" && rep < 3)
 	{
-		cout << endl;
-		cout << "Podaj haslo do kodowania:" << endl;
-		cin >> password;
+		std::cout << std::endl;
+		std::cout << "Podaj haslo do kodowania:" << std::endl;
+		std::cout << "->"; std::cin >> password;
 		rep++;
 	}
 
@@ -174,7 +171,7 @@ const char *Interface::getPassword()
 	//jesli ktos bardzo nie chce wpisac hasla
 	else
 	{
-		cerr << "Blad wpisywania hasla. Program zakonczy dzialanie." << endl;
+		std::cerr << "Blad wpisywania hasla. Program zakonczy dzialanie." << std::endl;
 		system("pause");
 		exit(1);
 	}
@@ -193,11 +190,11 @@ char *Interface::getImage()
 	{
 		//Nazwa pliku
 		if (choice == 1)
-			cout << endl << "Podaj nazwe pliku, w ktorym chcesz zapisac wiadomosc." << endl;
+			std::cout << std::endl << "Podaj nazwe pliku, w ktorym chcesz zapisac wiadomosc." << std::endl;
 		else if (choice == 2)
-			cout << endl << "Podaj nazwe pliku, z ktorego chcesz odkodowac wiadomosc." << endl;
-		cin >> bitM;
-		cout << endl;
+			std::cout << std::endl << "Podaj nazwe pliku, z ktorego chcesz odkodowac wiadomosc." << std::endl;
+		std::cout << "->"; std::cin >> bitM;
+		std::cout << std::endl;
 
 		//ewentualne dodanie rozszerzenia
 		lookforExtension(bitM, ".bmp");
@@ -218,7 +215,7 @@ char *Interface::getImage()
 	// limit powtorzen
 	if (rep == 3)
 	{
-		cerr << "Nie wskazales zadnego z plikow .bmp. Program zakonczy dzialanie." << endl;
+		std::cerr << "Nie wskazales zadnego z plikow .bmp. Program zakonczy dzialanie." << std::endl;
 		system("pause");
 		exit(1);
 	}
