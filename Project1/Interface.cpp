@@ -65,7 +65,7 @@ std::string Interface::getPathdir(char* maxpath)
 
 //----------------------------------------
 //Menu zwracajace wybrana opcje
-int Interface::viewMenu()
+void Interface::viewMenu()
 {
 	rep = 0;
 
@@ -85,12 +85,12 @@ int Interface::viewMenu()
 	if (rep == 3)
 		choice = 3;
 
-	return choice;
+	
 }
 
 //----------------------------------------
 //Zwraca wiadomosc
-const char *Interface::getMessage()
+std::string Interface::getMessage()
 {
 	rep = 0;
 	//wyszukiwanie txt w folderze
@@ -128,9 +128,10 @@ const char *Interface::getMessage()
 			//jesli nie jest pusty, konwersja do char
 			else
 			{
-				g_message = new char[message.length() + 1];
-				strcpy(g_message, message.c_str());
-				return g_message;
+				//g_message = new char[message.length() + 1];
+				//strcpy(g_message, message.c_str());
+				//return g_message;
+				return message;
 			}
 		}
 		//jesli nie ma takiego pliku
@@ -148,7 +149,7 @@ const char *Interface::getMessage()
 
 //----------------------------------------
 //Zwraca haslo
-const char *Interface::getPassword()
+std::string Interface::getPassword()
 {
 	rep = 0;
 
@@ -163,9 +164,10 @@ const char *Interface::getPassword()
 	//konwersja hasla do char
 	if (password != "")
 	{
-		g_pass = new char[password.length() + 1];
-		strcpy(g_pass, password.c_str());
-		return g_pass;
+		//g_pass = new char[password.length() + 1];
+		//strcpy(g_pass, password.c_str());
+		//return g_pass;
+		return password;
 	}
 
 	//jesli ktos bardzo nie chce wpisac hasla
@@ -175,6 +177,11 @@ const char *Interface::getPassword()
 		system("pause");
 		exit(1);
 	}
+}
+
+int Interface::returnChoice() const
+{
+	return choice;
 }
 
 //----------------------------------------
