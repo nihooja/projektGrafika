@@ -10,26 +10,19 @@ void Steganography::decode()
 {
 }
 
-int Steganography::stringLength(std::string a)
+std::vector<bool> Steganography::stringToBits(std::string message)
 {
-	return a.size;
-}
+	std::bitset<8> b;
+	std::vector<bool> bitArray;
+	
+	for (std::size_t i = 0; i < message.size(); ++i) {
 
-void Steganography::bitMessage(std::string message)
-{
-	messageLength = this->stringLength(message); //æœœœ
+		b = std::bitset<8>(message[i]);
+		for (int j = 0; j < 8; ++j)
+			bitArray.push_back(b[j]);
+	}
 
-
-
-
-
-
-
-
-}
-
-void Steganography::bitPassword(std::string password)
-{
+	return bitArray;
 }
 
 void Steganography::pixelsArray()

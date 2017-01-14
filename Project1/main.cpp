@@ -8,11 +8,8 @@ void choice_1(Interface &inter,Image &im, Steganography &steg)
 	std::string message = inter.getMessage();
 	std::string password = inter.getPassword();
 	char *img = inter.getImage();
-	steg.bitMessage(message);
-	steg.bitPassword(password);
-
-	//char *img = inter.getImage();
-	//SDL_Surface *bmp = im.LoadBitMap(img);
+	
+	SDL_Surface *bmp = im.LoadBitMap(img);
 
 }
 
