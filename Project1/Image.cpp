@@ -54,7 +54,7 @@ void Image::setPixel(int x, int y, Uint8 R, Uint8 G, Uint8 B)
 {
 	if ((x >= 0) && (x<SCREEN_WIDTH) && (y >= 0) && (y<SCREEN_HEIGHT))
 	{
-		/* Zamieniamy poszczególne sk?adowe koloru na format koloru pixela */
+		/* Zamieniamy poszczególne skladowe koloru na format koloru pixela */
 		Uint32 pixel = SDL_MapRGB(image->format, R, G, B);
 
 		/* Pobieramy informacji ile bajtów zajmuje jeden pixel */
@@ -63,7 +63,7 @@ void Image::setPixel(int x, int y, Uint8 R, Uint8 G, Uint8 B)
 		/* Obliczamy adres pixela */
 		Uint8 *p = (Uint8 *)image->pixels + y * image->pitch + x * bpp;
 
-		/* Ustawiamy warto?? pixela, w zale?no?ci od formatu powierzchni*/
+		/* Ustawiamy wartosc pixela, w zale?no?ci od formatu powierzchni*/
 		switch (bpp)
 		{
 		case 1: //8-bit

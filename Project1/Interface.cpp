@@ -4,41 +4,42 @@
 //Wypelnia wektor plikami o danym rozszerzeniu i je wypisuje
 void Interface::filesList(char *extension)
 {
-	
 	list.clear();
+	long files;
 
 	//adres katalogu z plikami
 	char q[MAX_PATH];
-	std::string dirpath = getPathdir(q);
+	string dirpath = getPathdir(q);
 
 	//wyszukiwanie plikow w katalogu projektu z danym rozszerzeniem
 	_finddata_t found_file;
 
 	//jesli nie ma zadnych
-	if ((found = _findfirst(extension, &found_file)) == -1)
+	if ((files = _findfirst(extension, &found_file)) == -1)
 	{
-		std::cerr << "W folderze: " << dirpath << " nie ma zadnych plikow " << extension << ". Program zakonczy dzialanie." << std::endl;
+		cerr << "W folderze: " << dirpath << " nie ma zadnych plikow " << extension << ". Program zakonczy dzialanie." << endl;
 		system("pause");
 		exit(1);
 	}
 
-	//jesli jest przynajmniej jeden, dodaje sie do wektora
+	//jesli jakis istnieje
 	else
 	{
-		//wypis pierwszego
+		//dodanie i wypis pierwszego
 		list.push_back(found_file.name);
 
-		std::cout << "Pliki znajdujace sie w katalogu: " << std::endl << dirpath << std::endl;
-		std::cout << /*list.size() << " - " <<*/ found_file.name << std::endl;
+		cout << "Pliki znajdujace sie w katalogu: " << endl << dirpath << endl;
+		cout << list.size() << " - " << found_file.name << endl;
 		rep++;
 
 		//wypis i dodanie reszty (jesli istnieje)
-		while (found = _findnext(found, &found_file) != -1)
+		while (files = _findnext(files, &found_file) != -1)
 		{
 			list.push_back(found_file.name);
-			std::cout << /*list.size() << " - " << */found_file.name << std::endl;
+			cout << list.size() << " - " << found_file.name << endl;
 		}
 	}
+	_findclose(files);
 }
 
 //----------------------------------------
@@ -47,7 +48,7 @@ void Interface::lookforExtension(std::string &text, std::string search)
 {
 	size_t found = text.find(search);
 
-	if (found == std::string::npos) // jesli nie ma -> dodaje
+	if (found == string::npos) // jesli nie ma -> dodaje
 	{
 		text += search;
 	}
@@ -56,28 +57,29 @@ void Interface::lookforExtension(std::string &text, std::string search)
 
 //----------------------------------------
 //Zwraca adres katalogu z programem
-std::string Interface::getPathdir(char* maxpath)
+string Interface::getPathdir(char* maxpath)
 {
 	GetModuleFileName(NULL, maxpath, MAX_PATH);
-	std::string::size_type pos = std::string(maxpath).find_last_of("\\/");
-	return std::string(maxpath).substr(0, pos);
+	string::size_type pos = string(maxpath).find_last_of("\\/");
+	return string(maxpath).substr(0, pos);
 }
 
 //----------------------------------------
 //Menu zwracajace wybrana opcje
-void Interface::viewMenu()
+char Interface::viewMenu()
 {
+	char choice = 0;
 	rep = 0;
 
-	std::cout << "========KODOWANIE WIADOMOSCI W BITMAPIE========" << std::endl;
+	cout << "========KODOWANIE WIADOMOSCI W BITMAPIE========" << endl;
 
 	while (choice != 1 && choice != 2 && choice != 3 && rep < 3)
 	{
-		std::cout << "Wybierz opcje?" << std::endl;
-		std::cout << "1 - zakodowac wiadomosc" << std::endl;
-		std::cout << "2 - odkodowac wiadomosc" <<std::endl;
-		std::cout << "3 - wyjscie" << std::endl;
-		std::cout << "->"; std::cin >> choice;
+		cout << "Wybierz opcje?" << endl;
+		cout << "1 - zakodowac wiadomosc" << endl;
+		cout << "2 - odkodowac wiadomosc" << endl;
+		cout << "3 - wyjscie" << endl << "-> ";
+		cin >> choice;
 		rep++;
 	}
 
@@ -85,63 +87,65 @@ void Interface::viewMenu()
 	if (rep == 3)
 		choice = 3;
 
-	
+	return choice;
 }
 
 //----------------------------------------
 //Zwraca wiadomosc
-std::string Interface::getMessage()
+string Interface::getMessage()
 {
+	string messageF = "";
+	string message = "";
 	rep = 0;
 	//wyszukiwanie txt w folderze
-	this->filesList("*.txt");
+	filesList("*.txt");
 
 	while (rep < 3)
 	{
-		
-		std::cout << "Podaj nazwe pliku z wiadomoscia:" << std::endl;
-		std::cout << "->"; std::cin >> messageF;
-		std::cout << std::endl;
 
-		
-		this->lookforExtension(messageF, ".txt");
+		cout << "Podaj nazwe pliku z wiadomoscia:" << endl << "-> ";
+		cin >> messageF; cout << endl;
 
-		file.open(messageF);
-		if (file)
+		if (messageF != "")
 		{
-			std::string msg;
+			lookforExtension(messageF, ".txt");
 
-			//odczyt z pliku
-			while (file >> message)
+			file.open(messageF);
+			if (file)
 			{
-				file >> msg;
-				message += msg;
-				message += " ";
-			}
+				string msg;
 
-			//jesli pusty
-			if (message == "")
-			{
-				std::cerr << ("Blad! Plik jest pusty!") << std::endl;
-				rep++;
+				//odczyt z pliku
+				while (file >> message)
+				{
+					file >> msg;
+					message += msg;
+					message += " ";
+				}
+
+				//jesli pusty
+				if (message == "")
+				{
+					cerr << ("Blad! Plik jest pusty!") << endl;
+					rep++;
+				}
+				//jesli nie jest pusty, zwraca
+				else
+					return message;
 			}
-			//jesli nie jest pusty, konwersja do char
+			//jesli nie ma takiego pliku
 			else
-			{
-				//g_message = new char[message.length() + 1];
-				//strcpy(g_message, message.c_str());
-				//return g_message;
-				return message;
-			}
+				rep++;
+		//jesli ktos nie podal nazwy
 		}
-		//jesli nie ma takiego pliku
 		else
 			rep++;
 	}
-	//jesli nie znalazl do konca
+
+	//jesli nie znalazl kilka razy
 	if (message == "" && rep == 3)
 	{
-		std::cerr << "Blad otwierania pliku. Program zakonczy dzialanie." << std::endl;
+		cerr << "Blad otwierania pliku. Program zakonczy dzialanie." << endl;
 		system("pause");
 		exit(1);
 	}
@@ -149,45 +153,35 @@ std::string Interface::getMessage()
 
 //----------------------------------------
 //Zwraca haslo
-std::string Interface::getPassword()
+string Interface::getPassword()
 {
+	string password = "";
 	rep = 0;
 
 	while (password == "" && rep < 3)
 	{
-		std::cout << std::endl;
-		std::cout << "Podaj haslo do kodowania:" << std::endl;
-		std::cout << "->"; std::cin >> password;
+		cout << "Podaj haslo do kodowania:" << endl << "-> ";
+		cin >> password; cout << endl;
 		rep++;
 	}
 
-	//konwersja hasla do char
 	if (password != "")
-	{
-		//g_pass = new char[password.length() + 1];
-		//strcpy(g_pass, password.c_str());
-		//return g_pass;
 		return password;
-	}
 
 	//jesli ktos bardzo nie chce wpisac hasla
 	else
 	{
-		std::cerr << "Blad wpisywania hasla. Program zakonczy dzialanie." << std::endl;
+		cerr << "Blad wpisywania hasla. Program zakonczy dzialanie." << endl;
 		system("pause");
 		exit(1);
 	}
-}
-
-int Interface::returnChoice() const
-{
-	return choice;
 }
 
 //----------------------------------------
 //Zwraca nazwe pliku bmp w ktorym zostanie zakodowana wiadomosc
 char *Interface::getImage()
 {
+	string bitM = "";
 	rep = 0;
 
 	//wyszukiwanie bmp w folderze
@@ -196,13 +190,9 @@ char *Interface::getImage()
 	while (rep < 3)
 	{
 		//Nazwa pliku
-		if (choice == 1)
-			std::cout << std::endl << "Podaj nazwe pliku, w ktorym chcesz zapisac wiadomosc." << std::endl;
-		else if (choice == 2)
-			std::cout << std::endl << "Podaj nazwe pliku, z ktorego chcesz odkodowac wiadomosc." << std::endl;
-		std::cout << "->"; std::cin >> bitM;
-		std::cout << std::endl;
-
+		cout << endl << "Podaj nazwe pliku bmp:" << endl << "-> ";
+		cin >> bitM; cout << endl;
+		
 		//ewentualne dodanie rozszerzenia
 		lookforExtension(bitM, ".bmp");
 
@@ -219,25 +209,23 @@ char *Interface::getImage()
 		}
 		rep++;
 	}
+
 	// limit powtorzen
 	if (rep == 3)
 	{
-		std::cerr << "Nie wskazales zadnego z plikow .bmp. Program zakonczy dzialanie." << std::endl;
+		cerr << "Nie wskazales zadnego z plikow .bmp. Program zakonczy dzialanie." << endl;
 		system("pause");
 		exit(1);
 	}
 }
 
 //----------------------------------------
-Interface::Interface() :bitM(""), messageF(""), message(""), choice(0), found(0)
+Interface::Interface()
 {}
 
 //----------------------------------------
 Interface::~Interface()
 {
-	delete[] g_message;
-	delete[] g_pass;
 	delete[] g_img;
-	_findclose(found);
 	file.close();
 }

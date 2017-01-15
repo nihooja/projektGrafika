@@ -5,12 +5,12 @@
 
 void choice_1(Interface &inter,Image &im, Steganography &steg)
 { 
-	std::string message = inter.getMessage();
-	std::string password = inter.getPassword();
+	string message = inter.getMessage();
+	string password = inter.getPassword();
 	char *img = inter.getImage();
 	
-	std::vector<bool>messageB = steg.stringToBits(message);
-	std::vector<bool>passwordB = steg.stringToBits(password);
+	vector<bool>messageB = steg.stringToBits(message);
+	vector<bool>passwordB = steg.stringToBits(password);
 
 	steg.code(messageB, passwordB, img);
 	
@@ -32,14 +32,14 @@ int main(int argc, char ** argv)
 	Interface interface_;
 	Image image(640, 480);
 	Steganography steganography;
-	interface_.viewMenu(); 
-	int choice = interface_.returnChoice();
+	char choice = interface_.viewMenu(); 
 
 	if (choice == 1)  
 		choice_1(interface_,image,steganography);
 	
 	else if (choice == 2) 
 		choice_2(interface_,image,steganography); 
+	
 	//wyjscie z programu
 	else
 	{
