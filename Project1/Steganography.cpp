@@ -4,11 +4,15 @@
 
 void Steganography::code(std::vector<bool> messageB,std::vector<bool> passwordB,char *img)
 {
-	makePixelsArray(img);
+	/*wiadomoœæ i has³o w bitach masz w vecotorach przekazane jako argumenty w tej metodzie!*/
 
+	makePixelsArray(img); //tworzy vector pixeli, vector masz w atrybucie klasy pixelsArray, ka¿dy element to wynik getPixel() jak na labach 
+	std::vector<bool> messageLengthB = intToBits(messageLength); //d³ugoœæ wiadomoœci w bitach
+	//modifyPixel(pos,R,G,B); //do modyfikowania, jako 1 argument leci element pixelsArray
+	
 	/*Algorytm*/
 
-	//modifyPixel(pos,R,G,B);
+	
 
 }
 
@@ -20,7 +24,8 @@ std::vector<bool> Steganography::stringToBits(std::string message)
 {
 	std::bitset<8> b;
 	std::vector<bool> bitArray;
-	
+	messageLength = message.size();
+
 	for (std::size_t i = 0; i < message.size(); ++i) {
 
 		b = std::bitset<8>(message[i]);
@@ -34,18 +39,23 @@ std::vector<bool> Steganography::stringToBits(std::string message)
 std::vector<bool> Steganography::intToBits(int num)
 {
 
-	std::bitset<32> a;
+	std::bitset<32> a(num);
 	std::vector<bool> bitArray;
 
-	std::bitset<32>(num);
 	for (int j = 0; j < 32; ++j)
 			bitArray.push_back(a[j]);
+
 	return bitArray;
+
+	
 }
 
 void Steganography::makePixelsArray(char *img)
 {
-	SDL_Surface *bmp = LoadBitMap(img);
+	
+    SDL_Surface *image_pointer = returnImage();
+	SDL_Surface *bmp = LoadBitMap(img,image_pointer);
+	
 	int a = (messageLength / 3) + 33;
 
 	/*Vector obiektów typu SDL_Color*/
