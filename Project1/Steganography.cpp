@@ -105,7 +105,7 @@ vector<bool> Steganography::ushortToBits(unsigned short num)
 //----------------------------------------
 unsigned short Steganography::BitsToUShort(vector <bool> vec)
 {
-	int a = 0;
+	unsigned short a = 0;
 	for (int i = 0; i < 8; i++)
 		a += vec[i] * pow(2, 7 - i);
 	

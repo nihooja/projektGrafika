@@ -11,7 +11,7 @@ class Steganography
 	int SCREEN_WIDTH;
 	int SCREEN_HEIGHT;
 	int messageLength;
-	std::vector<SDL_Color> pixelsArray;
+	vector<SDL_Color> pixelsArray;
 	
 public:
 	void Code(vector<bool>,vector<bool>,char*);
