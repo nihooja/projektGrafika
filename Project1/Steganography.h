@@ -5,10 +5,13 @@
 
 using namespace std;
 
-class Steganography: public Image
+class Steganography
 {
+	Image imgObj;
+	int SCREEN_WIDTH;
+	int SCREEN_HEIGHT;
 	int messageLength;
-	vector<SDL_Color> pixelsArray;
+	std::vector<SDL_Color> pixelsArray;
 	
 public:
 	void Code(vector<bool>,vector<bool>,char*);
@@ -23,7 +26,7 @@ public:
 	void makePixelsArray(char *);
 	void modifyPixel(int,Uint8,Uint8,Uint8);
 	
-	Steganography();
+	Steganography(Image &);
 	~Steganography();
 };
 

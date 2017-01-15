@@ -39,13 +39,13 @@ void Steganography::Code(vector<bool> messageB,vector<bool> passwordB,char *img)
 	while (1)
 	{
 		ChangePix(pixelsArray[k].r, messageB[w++], passwordB[h++], b);
-		if (h == passwordB.size()) h == 0;
+		if (h == passwordB.size()) h = 0;
 		if (w == messageLengthB.size()) break;
 		ChangePix(pixelsArray[k].b, messageB[w++], passwordB[h++], b);
-		if (h == passwordB.size()) h == 0;
+		if (h == passwordB.size()) h = 0;
 		if (w == messageLengthB.size()) break;
 		ChangePix(pixelsArray[k].g, messageB[w++], passwordB[h++], b);
-		if (h == passwordB.size()) h == 0;
+		if (h == passwordB.size()) h = 0;
 		if (w == messageLengthB.size()) break;
 
 		k++;
@@ -115,31 +115,37 @@ unsigned short Steganography::BitsToUShort(vector <bool> vec)
 //----------------------------------------
 void Steganography::makePixelsArray(char *img)
 {
-    SDL_Surface *image_pointer = returnImage();
-	SDL_Surface *bmp = LoadBitMap(img,image_pointer);
-	
-	int a = (messageLength + 32)/ 3 + 1;
+	//imgObj.createWindow(); 
+	SDL_Surface *bmp = imgObj.loadBitMap(img);
+
+
+
+	std::cout << "Pobieram potrzebne piksele...." << std::endl;
+	int a = (messageLength / 3) + 33;
 
 	/*Vector obiektów typu SDL_Color*/
 	for (int i = 0; i<a; ++i)
-		pixelsArray.push_back(getPixel(i,0));
+		pixelsArray.push_back(imgObj.getPixel(i, 0));
 
-	
-	//(SDL_FreeSurface(bmp);
-	//SDL_DestroyWindow(Image::returnWindow());
+
+
+
 }
-
-//----------------------------------------
 void Steganography::modifyPixel(int pos, Uint8 R, Uint8 G, Uint8 B)
 {
-	setPixel(pos, 0, R, G, B);
+	imgObj.setPixel(pos, 0, R, G, B);
+
 }
 
-//----------------------------------------
-Steganography::Steganography():messageLength(0)
-{}
 
-//----------------------------------------
+Steganography::Steganography(Image &obj):messageLength(0), imgObj(obj)
+{
+
+}
+
+
 Steganography::~Steganography()
 {
+
+
 }

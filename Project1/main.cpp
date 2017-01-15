@@ -29,7 +29,7 @@ int main(int argc, char ** argv)
 {
 	Interface interface_;
 	Image image(640, 480);
-	Steganography steganography;
+	Steganography steganography(image);
 	char choice = interface_.viewMenu(); 
 
 	if (choice == '1')  

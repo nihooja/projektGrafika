@@ -3,22 +3,24 @@
 
 void Image::createWindow()
 {
+
 	window = SDL_CreateWindow("Project", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-	if (!window){
+	if (!window) {
 		std::cerr << "SDL_CreateWindow() Failed: " << SDL_GetError() << std::endl;
 		exit(1);
 	}
 	else {
-		
+
 		screenSurface = SDL_GetWindowSurface(window);
 	}
 }
 
-SDL_Surface *Image::LoadBitMap(char *path) {
 
-	createWindow(); 
+SDL_Surface *Image::displayBitMap(char *path) {
+
+
 	image = SDL_LoadBMP(path);
-	if (!image){
+	if (!image) {
 		std::cerr << "SDL_LoadBMP() Failed: " << SDL_GetError() << std::endl;
 		exit(1);
 	}
@@ -28,46 +30,43 @@ SDL_Surface *Image::LoadBitMap(char *path) {
 	SDL_UpdateWindowSurface(window);
 	return image;
 }
-SDL_Surface *Image::LoadBitMap(char *path,SDL_Surface *img) {
 
-	createWindow();
-	img = SDL_LoadBMP(path);
-	if (!img) {
+SDL_Surface *Image::loadBitMap(char *path)
+{
+	image = SDL_LoadBMP(path);
+	if (!image) {
 		std::cerr << "SDL_LoadBMP() Failed: " << SDL_GetError() << std::endl;
 		exit(1);
 	}
-
-
-	SDL_BlitSurface(img, nullptr, screenSurface, nullptr);
-	SDL_UpdateWindowSurface(window);
-	return img;
+	return image;
 }
 
-SDL_Color Image::getPixel(int x,int y)
+
+SDL_Color Image::getPixel(int x, int y)
 {
-	
-		SDL_Color color;
-		Uint32 col = 0;
-		if ((x >= 0) && (x<SCREEN_WIDTH) && (y >= 0) && (y<SCREEN_HEIGHT)) {
-			//determine position
-			char* pPosition = (char*)image->pixels;
-			//offset by y
-			pPosition += (image->pitch*y);
-			//offset by x
-			pPosition += (image->format->BytesPerPixel*x);
-			//copy pixel data
-			memcpy(&col, pPosition, image->format->BytesPerPixel);
-			//convert color
-			SDL_GetRGB(col, image->format, &color.r, &color.g, &color.b);
-		}
-		return (color);
+
+	SDL_Color color;
+	Uint32 col = 0;
+	if ((x >= 0) && (x<SCREEN_WIDTH) && (y >= 0) && (y<SCREEN_HEIGHT)) {
+		//determine position
+		char* pPosition = (char*)image->pixels;
+		//offset by y
+		pPosition += (image->pitch*y);
+		//offset by x
+		pPosition += (image->format->BytesPerPixel*x);
+		//copy pixel data
+		memcpy(&col, pPosition, image->format->BytesPerPixel);
+		//convert color
+		SDL_GetRGB(col, image->format, &color.r, &color.g, &color.b);
+	}
+	return (color);
 }
 
 void Image::setPixel(int x, int y, Uint8 R, Uint8 G, Uint8 B)
 {
 	if ((x >= 0) && (x<SCREEN_WIDTH) && (y >= 0) && (y<SCREEN_HEIGHT))
 	{
-		/* Zamieniamy poszczególne skladowe koloru na format koloru pixela */
+		/* Zamieniamy poszczególne sk?adowe koloru na format koloru pixela */
 		Uint32 pixel = SDL_MapRGB(image->format, R, G, B);
 
 		/* Pobieramy informacji ile bajtów zajmuje jeden pixel */
@@ -76,7 +75,7 @@ void Image::setPixel(int x, int y, Uint8 R, Uint8 G, Uint8 B)
 		/* Obliczamy adres pixela */
 		Uint8 *p = (Uint8 *)image->pixels + y * image->pitch + x * bpp;
 
-		/* Ustawiamy wartosc pixela, w zale?no?ci od formatu powierzchni*/
+		/* Ustawiamy warto?? pixela, w zale?no?ci od formatu powierzchni*/
 		switch (bpp)
 		{
 		case 1: //8-bit
@@ -110,27 +109,31 @@ void Image::setPixel(int x, int y, Uint8 R, Uint8 G, Uint8 B)
 }
 
 
-SDL_Window* Image::returnWindow()const
+int Image::returnHeight()const
 {
-	return window;
+
+	return SCREEN_HEIGHT;
 
 }
 
-SDL_Surface * Image::returnImage() const
+int Image::returnWidth()const
 {
-	return image;
+
+	return SCREEN_WIDTH;
+
 }
 
-Image::Image(int weight,int height):
-	SCREEN_WIDTH(weight),SCREEN_HEIGHT(height),image(nullptr),window(nullptr),screenSurface(nullptr){
-	
+
+Image::Image(int weight, int height) :
+	SCREEN_WIDTH(weight), SCREEN_HEIGHT(height)/*,image(nullptr),window(nullptr),screenSurface(nullptr)*/ {
+
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
 		std::cerr << "SDL_Init() Failed: " << SDL_GetError() << std::endl;
 		exit(1);
 	}
-	
+
 }
-Image::~Image(){
+Image::~Image() {
 
 	//Deallocate surface
 	SDL_FreeSurface(image);
