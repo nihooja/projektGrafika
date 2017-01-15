@@ -3,7 +3,6 @@
 
 void Image::createWindow()
 {
-	
 	window = SDL_CreateWindow("Project", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 	if (!window){
 		std::cerr << "SDL_CreateWindow() Failed: " << SDL_GetError() << std::endl;

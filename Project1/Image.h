@@ -5,7 +5,6 @@
 
 class Image
 {	
-	
 	SDL_Surface *image;
 	SDL_Window *window;
 	SDL_Surface *screenSurface;
