@@ -9,7 +9,12 @@ void choice_1(Interface &inter,Image &im, Steganography &steg)
 	std::string password = inter.getPassword();
 	char *img = inter.getImage();
 	
-	SDL_Surface *bmp = im.LoadBitMap(img);
+	std::vector<bool>messageB = steg.stringToBits(message);
+	std::vector<bool>passwordB = steg.stringToBits(password);
+
+	steg.code(messageB, passwordB, img);
+	
+	//SDL_Surface *bmp = im.LoadBitMap(img);
 
 }
 

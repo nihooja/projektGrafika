@@ -97,7 +97,11 @@ void Image::setPixel(int x, int y, Uint8 R, Uint8 G, Uint8 B)
 }
 
 
+SDL_Window* Image::returnWindow()const
+{
+	return window;
 
+}
 
 Image::Image(int weight,int height):
 	SCREEN_WIDTH(weight),SCREEN_HEIGHT(height),image(nullptr),window(nullptr),screenSurface(nullptr){
