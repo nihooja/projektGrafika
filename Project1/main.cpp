@@ -34,10 +34,10 @@ int main(int argc, char ** argv)
 	Steganography steganography;
 	char choice = interface_.viewMenu(); 
 
-	if (choice == 1)  
+	if (choice == '1')  
 		choice_1(interface_,image,steganography);
 	
-	else if (choice == 2) 
+	else if (choice == '2') 
 		choice_2(interface_,image,steganography); 
 	
 	//wyjscie z programu

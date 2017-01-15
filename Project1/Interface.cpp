@@ -73,7 +73,7 @@ char Interface::viewMenu()
 
 	cout << "========KODOWANIE WIADOMOSCI W BITMAPIE========" << endl;
 
-	while (choice != 1 && choice != 2 && choice != 3 && rep < 3)
+	while (choice != '1' && choice != '2' && choice != '3' && rep < 3)
 	{
 		cout << "Wybierz opcje?" << endl;
 		cout << "1 - zakodowac wiadomosc" << endl;

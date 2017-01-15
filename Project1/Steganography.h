@@ -13,6 +13,7 @@ class Steganography: public Image
 public:
 	void code(vector<bool>,vector<bool>,char*);
 	void decode();
+	vector<bool> ushortToBits(unsigned short int);
 	vector<bool> stringToBits(string); //zwraca vector ze stringiem w bitach
 	vector<bool> intToBits(int); //zwraca vector<bool>(32 bit) w ktorych zapisany jest przyjmowany int 
 	void makePixelsArray(char *);
