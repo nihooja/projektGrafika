@@ -29,6 +29,20 @@ SDL_Surface *Image::LoadBitMap(char *path) {
 	SDL_UpdateWindowSurface(window);
 	return image;
 }
+SDL_Surface *Image::LoadBitMap(char *path,SDL_Surface *img) {
+
+	createWindow();
+	img = SDL_LoadBMP(path);
+	if (!img) {
+		std::cerr << "SDL_LoadBMP() Failed: " << SDL_GetError() << std::endl;
+		exit(1);
+	}
+
+
+	SDL_BlitSurface(img, nullptr, screenSurface, nullptr);
+	SDL_UpdateWindowSurface(window);
+	return img;
+}
 
 SDL_Color Image::getPixel(int x,int y)
 {
@@ -101,6 +115,11 @@ SDL_Window* Image::returnWindow()const
 {
 	return window;
 
+}
+
+SDL_Surface * Image::returnImage() const
+{
+	return image;
 }
 
 Image::Image(int weight,int height):
