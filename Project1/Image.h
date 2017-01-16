@@ -17,6 +17,7 @@ public:
 	void createWindow();
 	SDL_Surface *displayBitMap(char*);
 	SDL_Surface *loadBitMap(char *);
+	bool isMessageFitIn(int, char *);
 	SDL_Color getPixel(int, int);
 	int returnHeight()const;
 	int returnWidth()const;

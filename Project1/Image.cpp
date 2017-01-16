@@ -41,6 +41,17 @@ SDL_Surface *Image::loadBitMap(char *path)
 	return image;
 }
 
+bool Image::isMessageFitIn(int size, char * img_path)
+{
+	SDL_Surface *bmp = loadBitMap(img_path);
+	long long totalPix = (bmp->w) * (bmp->h);
+
+	if (size < totalPix)
+		return true;
+	else
+		return false;
+}
+
 
 SDL_Color Image::getPixel(int x, int y)
 {

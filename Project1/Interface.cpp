@@ -29,10 +29,9 @@ void Interface::filesList(char *extension)
 
 		cout << "Pliki znajdujace sie w katalogu: " << endl << dirpath << endl;
 		cout << list.size() << " - " << found_file.name << endl;
-		rep++;
 
 		//wypis i dodanie reszty (jesli istnieje)
-		while (files = _findnext(files, &found_file) != -1)
+		while (_findnext(files, &found_file) != -1)
 		{
 			list.push_back(found_file.name);
 			cout << list.size() << " - " << found_file.name << endl;
@@ -126,6 +125,7 @@ string Interface::getMessage()
 				{
 					cerr << ("Blad! Plik jest pusty!") << endl;
 					rep++;
+					file.close();
 				}
 				//jesli nie jest pusty, zwraca
 				else
@@ -177,7 +177,7 @@ string Interface::getPassword()
 
 //----------------------------------------
 //Zwraca nazwe pliku bmp w ktorym zostanie zakodowana wiadomosc
-char *Interface::getImage()
+char *Interface::getImage(int messageSizeComp)
 {
 	string bitM = "";
 	rep = 0;
@@ -195,13 +195,21 @@ char *Interface::getImage()
 		lookforExtension(bitM, ".bmp");
 
 		//sprawdzanie czy taki plik znajduje sie w folderze
-		for (int i = 0; i < list.size(); i++)
+		for (size_t i = 0; i < list.size(); i++)
 		{
 			//jesli jest
 			if (list[i] == bitM)
 			{
 				g_img = new char[bitM.length() + 1];
 				strcpy(g_img, bitM.c_str());
+				
+				/*Sprawdza czy bmp ma wystarczajšco pikseli*/
+				if (!imgObj.isMessageFitIn(messageSizeComp, g_img)) {
+					cout << "Wybrany plik bmp jest za maly by pomiescic zadana wiadomosc!" << endl;
+					delete[] g_img;
+					break;
+				}
+						
 				return g_img;
 			}
 		}
@@ -218,7 +226,7 @@ char *Interface::getImage()
 }
 
 //----------------------------------------
-Interface::Interface()
+Interface::Interface(Image &im) : imgObj(im), rep(0), g_img(nullptr)
 {}
 
 //----------------------------------------

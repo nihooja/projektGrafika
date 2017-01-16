@@ -5,11 +5,14 @@
 #include <string>
 #include <vector>
 #include <io.h>
+#include "Image.h"
 
 using namespace std;
 
 class Interface
 {
+	Image imgObj;
+
 	fstream file;
 
 	vector <string> list; // tablica plikow w folderze
@@ -24,12 +27,12 @@ class Interface
 public:
 
 	char viewMenu();
-	char *getImage();
+	char *getImage(int);
 
 	string getPassword();
 	string getMessage();
 
-	Interface();
+	Interface(Image &);
 	~Interface();
 };
 

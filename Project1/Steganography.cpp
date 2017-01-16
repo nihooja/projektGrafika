@@ -4,9 +4,24 @@ void Steganography::ChangePix(Uint8 pix, bool number, bool number2, vector<bool>
 {
 	usint.clear();
 	unsigned short a = pix;
+	cout << a << endl;
 	usint = ushortToBits(a); //zamieniam na binarny
-	usint[7] = (number ^ 1); //zmieniam ostatni bit
-	pix = BitsToUShort(usint); //z powrotem wstawiam do g
+	
+	for (int i = 7; i >= 0; i--)
+		cout << usint[i];
+	cout << endl;
+
+	cout << usint[0] << " " << number << " " << number2 << endl;
+
+	usint[0] = (number ^ number2); //zmieniam ostatni bit
+
+	for (int i = 7; i >=0; i--)
+		cout << usint[i];
+	cout<< endl;
+
+	pix = (Uint8)BitsToUShort(usint); //z powrotem wstawiam do g
+	a = pix;
+	cout << a << endl;
 }
 
 //----------------------------------------
@@ -23,7 +38,8 @@ void Steganography::Code(vector<bool> messageB,vector<bool> passwordB,char *img)
 	//dlugosc wiadomosci czyli pierwsze 32 bity
 	while (1)
 	{
-	ChangePix(pixelsArray[k].g, messageLengthB[w++],1,b); //jaki numer pixela/kolor, ktory bit dlugosci wiadomosci, wektor
+		int qwe = pixelsArray[k].g;
+	ChangePix(qwe, messageLengthB[w++],1,b); //jaki numer pixela/kolor, ktory bit dlugosci wiadomosci, wektor
 	//jesli ostatni bit rozmiaru zostal wpisany wyjdzie z while, jesli nie to robi dalej
 	if (w == messageLengthB.size()) break; 
 	ChangePix(pixelsArray[k].b, messageLengthB[w++],1, b);
@@ -106,8 +122,8 @@ vector<bool> Steganography::ushortToBits(unsigned short num)
 unsigned short Steganography::BitsToUShort(vector <bool> vec)
 {
 	unsigned short a = 0;
-	for (int i = 0; i < 8; i++)
-		a += vec[i] * pow(2, 7 - i);
+	for (int i = 7; i >= 0; i--)
+		a += (unsigned short)(vec[i] * pow(2, i));
 	
 	return a;
 }

@@ -1,4 +1,5 @@
 #pragma once
+#pragma warning(disable:4996)
 #include "Image.h"
 #include <bitset>
 #include <vector>
@@ -17,6 +18,7 @@ public:
 	void Code(vector<bool>,vector<bool>,char*);
 	void Decode();
 	void ChangePix(Uint8, bool, bool, vector<bool>);
+	void saveCoded(char *);
 
 	vector<bool> ushortToBits(unsigned short);
 	vector<bool> stringToBits(string); //zwraca vector ze stringiem w bitach
