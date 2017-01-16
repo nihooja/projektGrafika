@@ -5,7 +5,6 @@
 void Interface::filesList(char *extension)
 {
 	list.clear();
-	long files;
 
 	//adres katalogu z plikami
 	char q[MAX_PATH];
@@ -39,7 +38,6 @@ void Interface::filesList(char *extension)
 			cout << list.size() << " - " << found_file.name << endl;
 		}
 	}
-	_findclose(files);
 }
 
 //----------------------------------------
@@ -228,4 +226,5 @@ Interface::~Interface()
 {
 	delete[] g_img;
 	file.close();
+	_findclose(files);
 }
