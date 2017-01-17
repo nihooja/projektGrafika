@@ -13,18 +13,24 @@ void Steganography::changePix(Uint8 pix, bool number, bool number2, vector<bool>
 //----------------------------------------
 void Steganography::code(vector<bool> messageB, vector<bool> passwordB, char *img)
 {
+	//cout << messageLength << endl;
 	makePixelsArray(img); //tworzy pixelsArray
+	cout << "pA size: " << pixelsArray.size() << endl;
 	vector<bool> messageLengthB = intToBits(messageLength); 
 	vector<bool> b; //pomocniczy wektor do metody ushortToBits
 	int w = 0, k = 0, h = 0; //ktory bit wiadomosci, ktory pixel oraz ktory bit hasla
-
+	//cout << messageB.size() << endl;
+	//cout << messageLengthB.size() << endl;
+	//cout << pixelsArray.size();
 							 //dlugosc wiadomosci czyli pierwsze 32 bity
 	Uint8 qwe = 0; 
 	while (1)
 	{
 		qwe = pixelsArray[k].g;
+		int p = qwe;
+		//cout << (int)p << endl;
 		changePix(qwe, messageLengthB[w++], 1, b); //jaki numer pixela/kolor, ktory bit dlugosci wiadomosci, wektor
-												   //jesli ostatni bit rozmiaru zostal wpisany wyjdzie z while, jesli nie to robi dalej
+		//cout << (int)p << endl;								   //jesli ostatni bit rozmiaru zostal wpisany wyjdzie z while, jesli nie to robi dalej
 		if (w == messageLengthB.size()) break;
 		changePix(pixelsArray[k].b, messageLengthB[w++], 1, b);
 		if (w == messageLengthB.size()) break; //tu sie powinno skonczyc ale warunki zostawie wszedzie, potem musimy wymyslic jak sie ich pozbyc 
@@ -132,26 +138,24 @@ void Steganography::saveCoded(char *img)
 		cout << "rozne" << endl;
 	}
 
-
-
-
-
-
 }
 
 vector<bool> Steganography::stringToBits(string message)
 {
 	bitset<8> b;
 	vector<bool> bitArray;
+	
 	messageLength = message.size();
-
-	for (size_t i = 0; i < message.size(); ++i) {
-
-		b = bitset<8>(message[i]);
-		for (int j = 0; j < 8; ++j)
+	cout << "message: " << message << endl << "size of message:" << messageLength << endl;
+	for (size_t i = 0; i < message.size(); ++i)
+	{
+		b = bitset<8>(message.c_str()[i]);
+		
+		for (int j = 7; j >= 0; j--)
 			bitArray.push_back(b[j]);
 	}
 
+	cout << "size in bytes:" << bitArray.size() << endl;
 	return bitArray;
 }
 
@@ -193,14 +197,18 @@ unsigned short Steganography::bitsToUShort(vector <bool> vec)
 void Steganography::makePixelsArray(char *img)
 {
 	SDL_Surface *bmp = imgObj.loadBitMap(img);
-	int loop_cond = (messageLength + 32) / 3 + 1;
+	cout << "msg length: " << messageLength << endl;
+	int loop_cond = ((messageLength + 32) / 3) + 1;
+	cout << 
 	int j = 0;
 	
 	/*pobiera piksele od dolnego prawego w lewo */
 	/*W razie potrzeby przechodzi wiersz wy¿ej*/
 	/* y - liczba pobranych pikseli,piksele do pobrania warunkiem zakonczenia pêtli*/
-	for (int i = bmp->w, y = 0; y < loop_cond; i--, ++y) {
-		if (i + 1 == 0) {
+	for (int i = bmp->w, y = 0; y < loop_cond; i--, ++y) 
+	{
+		if (i + 1 == 0) 
+		{
 			j += 1;
 			i = bmp->w;
 			pixelsArray.push_back(imgObj.getPixel(i, bmp->h + j));

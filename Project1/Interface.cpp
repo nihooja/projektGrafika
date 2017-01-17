@@ -117,12 +117,8 @@ string Interface::getMessage()
 				string msg;
 
 				//odczyt z pliku
-				while (file >> message)
-				{
-					file >> msg;
+				while (getline(file, msg))
 					message += msg;
-					message += " ";
-				}
 
 				//jesli pusty
 				if (message == "")
