@@ -1,13 +1,17 @@
 #include "Steganography.h"
 
-void Steganography::changePix(Uint8 pix, bool number, bool number2, vector<bool> usint)
+void Steganography::changePix(Uint8 & pix, bool number, bool number2)
 {
-	usint.clear();
+	vector <bool> usint;
+	//zamiana r/g/b na short int
 	unsigned short a = (unsigned short)pix;
-	usint = ushortToBits(a); //zamieniam na binarny
-	usint[7] = (number ^ number2); //zmieniam ostatni bit
+	//zamiana short int na bity
+	usint = ushortToBits(a);
+	//xor
+	usint[7] = (number ^ number2);
+	//zamiana 
 	pix = (Uint8)bitsToUShort(usint); //z powrotem wstawiam do g
-
+	cout << "value: " << (int)pix << endl;
 }
 
 //----------------------------------------
@@ -27,24 +31,31 @@ void Steganography::code(vector<bool> messageB, vector<bool> passwordB, char *im
 	makePixelsArray(img);
 	
 	
-	vector<bool> b; //pomocniczy wektor do metody ushortToBits
+	 //pomocniczy wektor do metody ushortToBits
 	int w = 0, k = 0, h = 0; //ktory bit wiadomosci, ktory pixel oraz ktory bit hasla
-	Uint8 qwe = 0;			//cout << messageB.size() << endl;
+//cout << messageB.size() << endl;
 							 //cout << messageLengthB.size() << endl;
 							 //cout << pixelsArray.size();
 							 //dlugosc wiadomosci czyli pierwsze 32 bity
 	
 	while (1)
-	{
-		qwe = pixelsArray[k].g;
-		//int p = qwe;
-		//cout << (int)p << endl;
-		changePix(qwe, bitwiseMessageLengthB[w++], 1, b); //jaki numer pixela/kolor, ktory bit dlugosci wiadomosci, wektor
-												   //cout << (int)p << endl;								   //jesli ostatni bit rozmiaru zostal wpisany wyjdzie z while, jesli nie to robi dalej
+	{		
+		//zaczynamy od green bo potrzeba 32 bity z 11 pikseli (33bitow)
+	
+		cout << "pixel number = " << k << endl << " green before = " << (int)pixelsArray[k].g << endl;
+		changePix(pixelsArray[k].g, bitwiseMessageLengthB[w++], 1);
+		cout << " green after = " << (int)pixelsArray[k].g << endl;
+		//jesli ostatni bit rozmiaru zostal wpisany wyjdzie z while, jesli nie to robi dalej
 		if (w == bitwiseMessageLengthB.size()) break;
-		changePix(pixelsArray[k].b, bitwiseMessageLengthB[w++], 1, b);
-		if (w == bitwiseMessageLengthB.size()) break; //tu sie powinno skonczyc ale warunki zostawie wszedzie, potem musimy wymyslic jak sie ich pozbyc 
-		changePix(pixelsArray[k].r, bitwiseMessageLengthB[w++], 1, b);
+
+		cout << " blue before = " << (int)pixelsArray[k].b << endl;
+		changePix(pixelsArray[k].b, bitwiseMessageLengthB[w++], 1);
+		cout << " blue after = " << (int)pixelsArray[k].b << endl;
+		if (w == bitwiseMessageLengthB.size()) break;
+
+		cout << " red before = " << (int)pixelsArray[k].r << endl;
+		changePix(pixelsArray[k].r, bitwiseMessageLengthB[w++], 1);
+		cout << " red after = " << (int)pixelsArray[k].r << endl;
 		if (w == bitwiseMessageLengthB.size()) break;
 
 		k++;
@@ -54,13 +65,13 @@ void Steganography::code(vector<bool> messageB, vector<bool> passwordB, char *im
 	w = 0; h = 0; k = 12;
 	while (1)
 	{
-		changePix(pixelsArray[k].r, messageB[w++], passwordB[h++], b);
+		changePix(pixelsArray[k].r, messageB[w++], passwordB[h++]);
 		if (h == passwordB.size()) h = 0;
 		if (w == bitwiseMessageLengthB.size()) break;
-		changePix(pixelsArray[k].b, messageB[w++], passwordB[h++], b);
+		changePix(pixelsArray[k].b, messageB[w++], passwordB[h++]);
 		if (h == passwordB.size()) h = 0;
 		if (w == bitwiseMessageLengthB.size()) break;
-		changePix(pixelsArray[k].g, messageB[w++], passwordB[h++], b);
+		changePix(pixelsArray[k].g, messageB[w++], passwordB[h++]);
 		if (h == passwordB.size()) h = 0;
 		if (w == bitwiseMessageLengthB.size()) break;
 
@@ -76,9 +87,10 @@ void Steganography::decode(vector<bool> passwordB, char * img_path)
 
 //----------------------------------------
 
-/*Dorobi? obs?ug? b??dów w ?rodku!*/
+/*Dorobic obs?ug? b??dów w ?rodku!*/
 void Steganography::saveCoded(char *img)
 {
+	Image obj(640, 480);
 
 	string bmpFile = "";
 	cout << "Podaj nazwe pliku bmp do stworzenia" << endl;
@@ -91,18 +103,20 @@ void Steganography::saveCoded(char *img)
 	strcat(newBmpPath, ".bmp");
 
 	//wczytanie do nowej bitmapy pikseli z pixelsArray
-	SDL_Surface *bmp = imgObj.loadBitMap(img);
+	SDL_Surface *bmp = obj.loadBitMap(img);
 	int loop_cond = ((bitwiseMessageLength + 32) / 3) + 1;
 	int j = 0;
-	
-	for (int i = bmp->w, y = 0; y < loop_cond; i--, ++y) {
-		if (i + 1 == 0) {
+
+	for (int i = bmp->w, y = 0; y < loop_cond; i--, y++) 
+	{
+		if (i + 1 == 0) 
+		{
 			j += 1;
 			i = bmp->w;
-			imgObj.setPixel(i, bmp->h + j, pixelsArray[i].r, pixelsArray[i].g, pixelsArray[i].b);
+			obj.setPixel(i, bmp->h - j, pixelsArray[y].r, pixelsArray[y].g, pixelsArray[y].b);
 
 		}
-		else imgObj.setPixel(i, bmp->h + j, pixelsArray[i].r, pixelsArray[i].g, pixelsArray[i].b);
+		else obj.setPixel(i, bmp->h - j, pixelsArray[y].r, pixelsArray[y].g, pixelsArray[y].b);
 	}
 
 	SDL_SaveBMP(bmp, newBmpPath);
@@ -128,8 +142,8 @@ void Steganography::saveCoded(char *img)
 		Uint8 b2 = temp2.b;
 
 
-		if (g1 != g2 || r1 != r2 || b1 != b2)
-			cout << "rozne" << endl;
+		//if (g1 != g2 || r1 != r2 || b1 != b2)
+		//	cout << "rozne" << endl;
 	}
 
 }
@@ -204,9 +218,9 @@ void Steganography::makePixelsArray(char *img)
 		{
 			j += 1;
 			i = bmp->w;
-			pixelsArray.push_back(imgObj.getPixel(i, bmp->h + j));
+			pixelsArray.push_back(imgObj.getPixel(i, bmp->h - j));
 		}
-		else pixelsArray.push_back(imgObj.getPixel(i, bmp->h + j));
+		else pixelsArray.push_back(imgObj.getPixel(i, bmp->h - j));
 	}
 }
 

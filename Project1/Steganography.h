@@ -18,7 +18,7 @@ class Steganography
 public:
 	void code(vector<bool>,vector<bool>,char*);
 	void decode(vector<bool>,char *);
-	void changePix(Uint8, bool, bool, vector<bool>);
+	void changePix(Uint8&, bool, bool);
 	vector<bool> ushortToBits(unsigned short);
 	void saveCoded(char *);
 	vector<bool> stringToBits(string); //zwraca vector ze stringiem w bitach

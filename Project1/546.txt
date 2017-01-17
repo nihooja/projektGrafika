@@ -1,2 +1,15 @@
-Ala ma kota.
-Andrzej ma psa.
+cout << "pixel number = " << k << endl << " green before = " << (int)pixelsArray[k].g << endl;
+		changePix(pixelsArray[k].g, bitwiseMessageLengthB[w++], 1);
+		cout << " green after = " << (int)pixelsArray[k].g << endl;
+		//jesli ostatni bit rozmiaru zostal wpisany wyjdzie z while, jesli nie to robi dalej
+		if (w == bitwiseMessageLengthB.size()) break;
+
+		cout << " blue before = " << (int)pixelsArray[k].b << endl;
+		changePix(pixelsArray[k].b, bitwiseMessageLengthB[w++], 1);
+		cout << " blue after = " << (int)pixelsArray[k].b << endl;
+		if (w == bitwiseMessageLengthB.size()) break;
+
+		cout << " red before = " << (int)pixelsArray[k].r << endl;
+		changePix(pixelsArray[k].r, bitwiseMessageLengthB[w++], 1);
+		cout << " red after = " << (int)pixelsArray[k].r << endl;
+		if (w == bitwiseMessageLengthB.size()) break;
