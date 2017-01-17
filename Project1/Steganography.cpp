@@ -19,11 +19,9 @@ void Steganography::code(vector<bool> messageB, vector<bool> passwordB, char *im
 	int w = 0, k = 0, h = 0; //ktory bit wiadomosci, ktory pixel oraz ktory bit hasla
 
 							 //dlugosc wiadomosci czyli pierwsze 32 bity
-	Uint8 qwe = 0; 
 	while (1)
 	{
-		qwe = pixelsArray[k].g;
-		changePix(qwe, messageLengthB[w++], 1, b); //jaki numer pixela/kolor, ktory bit dlugosci wiadomosci, wektor
+		changePix(pixelsArray[k].g, messageLengthB[w++], 1, b); //jaki numer pixela/kolor, ktory bit dlugosci wiadomosci, wektor
 												   //jesli ostatni bit rozmiaru zostal wpisany wyjdzie z while, jesli nie to robi dalej
 		if (w == messageLengthB.size()) break;
 		changePix(pixelsArray[k].b, messageLengthB[w++], 1, b);
