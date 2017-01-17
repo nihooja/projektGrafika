@@ -52,6 +52,10 @@ void Steganography::code(vector<bool> messageB, vector<bool> passwordB, char *im
 	}
 
 	saveCoded(img);
+
+
+
+
 	 
 }
 
@@ -80,18 +84,58 @@ void Steganography::saveCoded(char *img)
 	strcat(newBmpPath, ".bmp");
 
 	//wskaünik na adres bitmapy 
-	SDL_Surface *bmp = SDL_LoadBMP(img);
+	SDL_Surface *bmp = imgObj.loadBitMap(img);
 
 	//wczytanie do nowej bitmapy pikseli z pixelsArray
-	int a = (messageLength + 32) / 3 + 1;
-	for (int i = 0; i < a; i++)
-		imgObj.setPixel(i, 0, pixelsArray[i].r, pixelsArray[i].g, pixelsArray[i].b);
+	int loop_cond = (messageLength + 32) / 3 + 1;
+	int j = 0;
+	//for (int i = 0; i < ; i++)
+		//imgObj.setPixel(i, 0, pixelsArray[i].r, pixelsArray[i].g, pixelsArray[i].b);
+
+	cout << loop_cond << endl;
+	for (int i = bmp->w, y = 0; y < loop_cond; i--, ++y) {
+		if (i + 1 == 0) {
+			j += 1;
+			i = bmp->w;
+			imgObj.setPixel(i,bmp->h + j,pixelsArray[i].r, pixelsArray[i].g, pixelsArray[i].b);
+			
+		}
+		else imgObj.setPixel(i, bmp->h + j, pixelsArray[i].r, pixelsArray[i].g, pixelsArray[i].b);
+	}
 
 	SDL_SaveBMP(bmp, newBmpPath);
 
 	cout << "Zakonczono kodowanie wiadomosci. Rezultat zostal zapisany w pliku '" << newBmpPath << "'" << endl;
 	//imgObj.createWindow();
 	//imgObj.displayBitMap(bmpFileChar);
+
+
+	SDL_Surface *bmp1 = imgObj.loadBitMap(img);
+	Image imgObj2(640, 480);
+	SDL_Surface *bmp2 = imgObj2.loadBitMap(newBmpPath);
+	SDL_Color temp;
+	SDL_Color temp2;
+
+	for (int i = bmp1->w, j = 0; j < loop_cond; --i, ++j) {
+
+		temp = imgObj.getPixel(i,bmp1->h);
+		temp2 = imgObj2.getPixel(i, bmp2->h);
+		Uint8 g1 = temp.g;
+		Uint8 g2 = temp2.g;
+		Uint8 r1 = temp.r;
+		Uint8 r2 = temp2.r;
+		Uint8 b1 = temp.b;
+		Uint8 b2 = temp2.b;
+
+
+		if(g1 != g2 || r1 != r2 || b1 != b2 )
+		cout << "rozne" << endl;
+	}
+
+
+
+
+
 
 }
 
@@ -152,7 +196,7 @@ void Steganography::makePixelsArray(char *img)
 	int loop_cond = (messageLength + 32) / 3 + 1;
 	int j = 0;
 	
-	/*pobiera piksele od dolnego lewego rogu w lewo*/
+	/*pobiera piksele od dolnego prawego w lewo */
 	/*W razie potrzeby przechodzi wiersz wyøej*/
 	/* y - liczba pobranych pikseli,piksele do pobrania warunkiem zakonczenia pÍtli*/
 	for (int i = bmp->w, y = 0; y < loop_cond; i--, ++y) {
