@@ -9,33 +9,37 @@ void choice_1(Interface &inter,Image &im, Steganography &steg)
 	vector<bool>messageB = steg.stringToBits(message);
 	vector<bool>passwordB = steg.stringToBits(password);
 
-	//przekazuje by sprawdzic czy wiadomosc zmiesci sie w bmp
+	/*pobiera nazwê pliku bmp do otworzenia + obs³uga sytuacji granicznych*/
 	char *img = inter.getImage((message.size() + 32) / 3 + 1);
 
-	steg.Code(messageB, passwordB, img);
+	steg.code(messageB, passwordB, img);
 }
 
 void choice_2(Interface &inter,Image &im,Steganography &steg)
 { 
-	//char *img = inter.getImage();
-	//SDL_Surface *bmp = im.LoadBitMap(img);
+	char *img = inter.getImage(0);
+	string password = inter.getPassword();
+	vector<bool>passwordB = steg.stringToBits(password);
+	steg.decode(passwordB,img);
+	
 }
 
 
 
 int main(int argc, char ** argv)
 {
+	
 	Image image(640, 480);
 	Interface interface_(image);
 	Steganography steganography(image);
-	char choice = interface_.viewMenu();
+	char choice = interface_.viewMenu(); 
 
-	if (choice == '1')
-		choice_1(interface_, image, steganography);
-
-	else if (choice == '2')
-		choice_2(interface_, image, steganography);
-
+	if (choice == '1')  
+		choice_1(interface_,image,steganography);
+	
+	else if (choice == '2') 
+		choice_2(interface_,image,steganography); 
+	
 	else
 	{
 		cout << "Program konczy dzialanie." << endl;

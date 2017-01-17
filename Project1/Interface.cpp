@@ -5,6 +5,7 @@
 void Interface::filesList(char *extension)
 {
 	list.clear();
+	long files;
 
 	//adres katalogu z plikami
 	char q[MAX_PATH];
@@ -29,14 +30,17 @@ void Interface::filesList(char *extension)
 
 		cout << "Pliki znajdujace sie w katalogu: " << endl << dirpath << endl;
 		cout << list.size() << " - " << found_file.name << endl;
+		rep++;
 
 		//wypis i dodanie reszty (jesli istnieje)
+
 		while (_findnext(files, &found_file) != -1)
 		{
 			list.push_back(found_file.name);
 			cout << list.size() << " - " << found_file.name << endl;
 		}
 	}
+	_findclose(files);
 }
 
 //----------------------------------------
@@ -72,7 +76,7 @@ char Interface::viewMenu()
 
 	while (choice != '1' && choice != '2' && choice != '3' && rep < 3)
 	{
-		cout << "Wybierz opcje?" << endl;
+		cout << "Wybierz opcje" << endl;
 		cout << "1 - zakodowac wiadomosc" << endl;
 		cout << "2 - odkodowac wiadomosc" << endl;
 		cout << "3 - wyjscie" << endl << "-> ";
@@ -136,8 +140,10 @@ string Interface::getMessage()
 				rep++;
 		//jesli ktos nie podal nazwy
 		}
-		else
+		else 
 			rep++;
+			
+		
 	}
 
 	//jesli nie znalazl kilka razy
@@ -166,7 +172,6 @@ string Interface::getPassword()
 	if (password != "")
 		return password;
 
-	//jesli ktos bardzo nie chce wpisac hasla
 	else
 	{
 		cerr << "Blad wpisywania hasla. Program zakonczy dzialanie." << endl;
@@ -181,17 +186,16 @@ char *Interface::getImage(int messageSizeComp)
 {
 	string bitM = "";
 	rep = 0;
-
+	
 	//wyszukiwanie bmp w folderze
 	filesList("*.bmp");
 
 	while (rep < 3)
 	{
-		//Nazwa pliku
+		
 		cout << endl << "Podaj nazwe pliku bmp:" << endl << "-> ";
 		cin >> bitM; cout << endl;
 		
-		//ewentualne dodanie rozszerzenia
 		lookforExtension(bitM, ".bmp");
 
 		//sprawdzanie czy taki plik znajduje sie w folderze
@@ -203,20 +207,26 @@ char *Interface::getImage(int messageSizeComp)
 				g_img = new char[bitM.length() + 1];
 				strcpy(g_img, bitM.c_str());
 				
-				/*Sprawdza czy bmp ma wystarczajšco pikseli*/
-				if (!imgObj.isMessageFitIn(messageSizeComp, g_img)) {
-					cout << "Wybrany plik bmp jest za maly by pomiescic zadana wiadomosc!" << endl;
-					delete[] g_img;
-					break;
+				if (messageSizeComp) {
+					/*Sprawdza czy bmp ma wystarczaj¹co pikseli*/
+					if (!imgObj.isMessageFittedIn(messageSizeComp, g_img)) {
+						cout << "Wybrany plik bmp jest za maly by pomiescic zadana wiadomosc!" << endl;
+						delete[] g_img;
+						break;
+					}
+					/*Sprawdza czy bmp przekracza 1920x1080*/
+					if (!imgObj.isBmpRightSize(g_img)) {
+						cout << "Wybrany plik bmp jest za duzy!" << endl;
+						delete[]g_img;
+						break;
+					}
 				}
-						
 				return g_img;
 			}
 		}
 		rep++;
 	}
 
-	// limit powtorzen
 	if (rep == 3)
 	{
 		cerr << "Nie wskazales zadnego z plikow .bmp. Program zakonczy dzialanie." << endl;
@@ -226,7 +236,7 @@ char *Interface::getImage(int messageSizeComp)
 }
 
 //----------------------------------------
-Interface::Interface(Image &im) : imgObj(im), rep(0), g_img(nullptr)
+Interface::Interface(Image &im):imgObj(im),rep(0),g_img(nullptr)
 {}
 
 //----------------------------------------
@@ -234,5 +244,4 @@ Interface::~Interface()
 {
 	delete[] g_img;
 	file.close();
-	_findclose(files);
 }

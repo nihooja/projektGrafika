@@ -12,13 +12,9 @@ using namespace std;
 class Interface
 {
 	Image imgObj;
-
 	fstream file;
-
 	vector <string> list; // tablica plikow w folderze
-
 	int rep; // do prob wpisywania danych	
-	long files;
 	char *g_img; // konwersja stringa z nazwa pliku bmp do char
 
 	void lookforExtension(string&, string); //dopisywanie rozszerzen
@@ -28,7 +24,6 @@ public:
 
 	char viewMenu();
 	char *getImage(int);
-
 	string getPassword();
 	string getMessage();
 

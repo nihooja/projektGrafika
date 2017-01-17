@@ -18,7 +18,7 @@ void Image::createWindow()
 
 SDL_Surface *Image::displayBitMap(char *path) {
 
-
+	
 	image = SDL_LoadBMP(path);
 	if (!image) {
 		std::cerr << "SDL_LoadBMP() Failed: " << SDL_GetError() << std::endl;
@@ -41,12 +41,24 @@ SDL_Surface *Image::loadBitMap(char *path)
 	return image;
 }
 
-bool Image::isMessageFitIn(int size, char * img_path)
+bool Image::isMessageFittedIn(int size , char * img_path)
 {
 	SDL_Surface *bmp = loadBitMap(img_path);
 	long long totalPix = (bmp->w) * (bmp->h);
-
+	
 	if (size < totalPix)
+		return true;
+	else
+		return false;
+}
+
+bool Image::isBmpRightSize(char * img_path)
+{
+	SDL_Surface *bmp = loadBitMap(img_path);
+	long long bmpSize = (bmp->h)*(bmp->w);
+	const long long maxSize = 1920 * 1080;
+
+	if (bmpSize <= maxSize)
 		return true;
 	else
 		return false;
@@ -136,7 +148,7 @@ int Image::returnWidth()const
 
 
 Image::Image(int weight, int height) :
-	SCREEN_WIDTH(weight), SCREEN_HEIGHT(height)/*,image(nullptr),window(nullptr),screenSurface(nullptr)*/ {
+	SCREEN_WIDTH(weight), SCREEN_HEIGHT(height),image(nullptr),window(nullptr),screenSurface(nullptr){
 
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
 		std::cerr << "SDL_Init() Failed: " << SDL_GetError() << std::endl;

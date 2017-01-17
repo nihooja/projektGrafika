@@ -17,8 +17,9 @@ public:
 	void createWindow();
 	SDL_Surface *displayBitMap(char*);
 	SDL_Surface *loadBitMap(char *);
-	bool isMessageFitIn(int, char *);
 	SDL_Color getPixel(int, int);
+	bool isMessageFittedIn(int, char *);
+	bool isBmpRightSize(char*);
 	int returnHeight()const;
 	int returnWidth()const;
 	void setPixel(int, int, Uint8, Uint8, Uint8);
