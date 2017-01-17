@@ -23,7 +23,7 @@ class Interface
 public:
 
 	char viewMenu();
-	char *getImage(int);
+	char *getImage(int = 0);
 	string getPassword();
 	string getMessage();
 

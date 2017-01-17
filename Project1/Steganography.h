@@ -9,10 +9,11 @@ using namespace std;
 class Steganography
 {
 	Image imgObj;
-	int SCREEN_WIDTH;
-	int SCREEN_HEIGHT;
-	int messageLength;
-	std::vector<SDL_Color> pixelsArray;
+	int bitwiseMessageLength;
+	int bitwisePasswordLength;
+	vector<bool> bitwisePasswordLengthB;
+	vector<bool> bitwiseMessageLengthB;
+	vector<SDL_Color> pixelsArray;
 	
 public:
 	void code(vector<bool>,vector<bool>,char*);

@@ -117,9 +117,12 @@ string Interface::getMessage()
 				string msg;
 
 				//odczyt z pliku
-				while (getline(file, msg))
+				while (getline(file, msg)) {
 					message += msg;
-
+					message += "\n";
+				}
+				message.resize(message.size() - 2);
+				
 				//jesli pusty
 				if (message == "")
 				{
@@ -178,7 +181,7 @@ string Interface::getPassword()
 
 //----------------------------------------
 //Zwraca nazwe pliku bmp w ktorym zostanie zakodowana wiadomosc
-char *Interface::getImage(int messageSizeComp)
+char *Interface::getImage(int bMessageSize)
 {
 	string bitM = "";
 	rep = 0;
@@ -203,9 +206,9 @@ char *Interface::getImage(int messageSizeComp)
 				g_img = new char[bitM.length() + 1];
 				strcpy(g_img, bitM.c_str());
 				
-				if (messageSizeComp) {
+				if (bMessageSize) {
 					/*Sprawdza czy bmp ma wystarczaj¹co pikseli*/
-					if (!imgObj.isMessageFittedIn(messageSizeComp, g_img)) {
+					if (!imgObj.isMessageFittedIn(bMessageSize, g_img)) {
 						cout << "Wybrany plik bmp jest za maly by pomiescic zadana wiadomosc!" << endl;
 						delete[] g_img;
 						break;
