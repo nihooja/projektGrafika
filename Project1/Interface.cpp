@@ -121,7 +121,7 @@ string Interface::getMessage()
 					message += msg;
 					message += "\n";
 				}
-				message.resize(message.size() - 2);
+				message.resize(message.size() - 1);
 				
 				//jesli pusty
 				if (message == "")

@@ -11,6 +11,7 @@ class Steganography
 	Image imgObj;
 	int bitwiseMessageLength;
 	int bitwisePasswordLength;
+	vector <bool> usint;
 	vector<bool> bitwisePasswordLengthB;
 	vector<bool> bitwiseMessageLengthB;
 	vector<SDL_Color> pixelsArray;
