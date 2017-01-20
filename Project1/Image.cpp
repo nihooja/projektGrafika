@@ -25,7 +25,8 @@ SDL_Surface *Image::displayBitMap(char *path) {
 		exit(1);
 	}
 
-
+	SCREEN_WIDTH = image->w;
+	SCREEN_HEIGHT = image->h;
 	SDL_BlitSurface(image, nullptr, screenSurface, nullptr);
 	SDL_UpdateWindowSurface(window);
 	return image;
@@ -38,6 +39,8 @@ SDL_Surface *Image::loadBitMap(char *path)
 		std::cerr << "SDL_LoadBMP() Failed: " << SDL_GetError() << std::endl;
 		exit(1);
 	}
+	SCREEN_WIDTH = image->w;
+	SCREEN_HEIGHT = image->h;
 	return image;
 }
 
@@ -147,8 +150,8 @@ int Image::returnWidth()const
 }
 
 
-Image::Image(int weight, int height) :
-	SCREEN_WIDTH(weight), SCREEN_HEIGHT(height),image(nullptr),window(nullptr),screenSurface(nullptr){
+Image::Image() :
+	SCREEN_WIDTH(0), SCREEN_HEIGHT(0),image(nullptr),window(nullptr),screenSurface(nullptr){
 
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
 		std::cerr << "SDL_Init() Failed: " << SDL_GetError() << std::endl;

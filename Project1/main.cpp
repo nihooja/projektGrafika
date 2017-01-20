@@ -30,7 +30,7 @@ void choice_2(Interface &inter,Image &im,Steganography &steg)
 int main(int argc, char ** argv)
 {
 	
-	Image image(1920, 1080);
+	Image image;
 	Interface interface_(image);
 	Steganography steganography(image);
 	char choice = interface_.viewMenu(); 
@@ -47,5 +47,6 @@ int main(int argc, char ** argv)
 		system("pause");
 		exit(0);
 	}
+	system("pause");
 	return 0;
 } 

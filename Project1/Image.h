@@ -22,7 +22,7 @@ public:
 	int returnHeight()const;
 	int returnWidth()const;
 	void setPixel(int, int, Uint8, Uint8, Uint8);
-	Image(int, int);
+	Image();
 	~Image();
-	Image() {}
+	
 };
