@@ -6,20 +6,19 @@
 #include <vector>
 #include <io.h>
 #include "Image.h"
-
+#include "File.h"
+#include "Conversion.h"
 using namespace std;
 
 class Interface
 {
 	Image imgObj;
-	fstream file;
+	File fileObj;
+	Conversion converObj;
+	
 	vector <string> list; // tablica plikow w folderze
-	int rep; // do prob wpisywania danych	
 	char *g_img; // konwersja stringa z nazwa pliku bmp do char
 
-	void lookforExtension(string&, string); //dopisywanie rozszerzen
-	void filesList(char*); // robi liste plikow w folderze
-	string getPathdir(char*); //sciezka katalogu projektu
 public:
 
 	char viewMenu();
@@ -27,7 +26,6 @@ public:
 	string getPassword();
 	string getMessage();
 
-	Interface(Image &);
+	Interface(Image &,File &,Conversion &);
 	~Interface();
 };
-

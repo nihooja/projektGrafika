@@ -133,21 +133,6 @@ void Image::setPixel(int x, int y, Uint8 R, Uint8 G, Uint8 B)
 }
 
 
-int Image::returnHeight()const
-{
-
-	return SCREEN_HEIGHT;
-
-}
-
-int Image::returnWidth()const
-{
-
-	return SCREEN_WIDTH;
-
-}
-
-
 Image::Image() :
 	SCREEN_WIDTH(0), SCREEN_HEIGHT(0), image(nullptr), window(nullptr), screenSurface(nullptr) {
 

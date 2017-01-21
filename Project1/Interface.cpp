@@ -1,76 +1,11 @@
 #include "Interface.h"
 
 //----------------------------------------
-//Wypelnia wektor plikami o danym rozszerzeniu i je wypisuje
-void Interface::filesList(char *extension)
-{
-	list.clear();
-	long files;
-
-	//adres katalogu z plikami
-	char q[MAX_PATH];
-	string dirpath = getPathdir(q);
-
-	//wyszukiwanie plikow w katalogu projektu z danym rozszerzeniem
-	_finddata_t found_file;
-
-	//jesli nie ma zadnych
-	if ((files = _findfirst(extension, &found_file)) == -1)
-	{
-		cerr << "W folderze: " << dirpath << " nie ma zadnych plikow " << extension << ". Program zakonczy dzialanie." << endl;
-		system("pause");
-		exit(1);
-	}
-
-	//jesli jakis istnieje
-	else
-	{
-		//dodanie i wypis pierwszego
-		list.push_back(found_file.name);
-
-		cout << "Pliki znajdujace sie w katalogu: " << endl << dirpath << endl;
-		cout << list.size() << " - " << found_file.name << endl;
-		rep++;
-
-		//wypis i dodanie reszty (jesli istnieje)
-
-		while (_findnext(files, &found_file) != -1)
-		{
-			list.push_back(found_file.name);
-			cout << list.size() << " - " << found_file.name << endl;
-		}
-	}
-	_findclose(files);
-}
-
-//----------------------------------------
-//Po wprowadzeniu nazwy pliku sprawdza, czy zawiera ona rozszerzenie
-void Interface::lookforExtension(std::string &text, std::string search)
-{
-	size_t found = text.find(search);
-
-	if (found == string::npos) // jesli nie ma -> dodaje
-	{
-		text += search;
-	}
-	else return;
-}
-
-//----------------------------------------
-//Zwraca adres katalogu z programem
-string Interface::getPathdir(char* maxpath)
-{
-	GetModuleFileName(NULL, maxpath, MAX_PATH);
-	string::size_type pos = string(maxpath).find_last_of("\\/");
-	return string(maxpath).substr(0, pos);
-}
-
-//----------------------------------------
 //Menu zwracajace wybrana opcje
 char Interface::viewMenu()
 {
 	char choice = 0;
-	rep = 0;
+	int rep = 0;
 
 	cout << "========KODOWANIE WIADOMOSCI W BITMAPIE========" << endl;
 
@@ -97,11 +32,12 @@ string Interface::getMessage()
 {
 	string messageF = "";
 	string message = "";
-	rep = 0;
+	fstream file;
+	int rep = 0;
 	//wyszukiwanie txt w folderze
-	filesList("*.txt");
+	fileObj.filesList("*.txt");
 
-	while (rep < 3)
+	while (rep < 5)
 	{
 
 		cout << "Podaj nazwe pliku z wiadomoscia:" << endl << "-> ";
@@ -109,7 +45,7 @@ string Interface::getMessage()
 
 		if (messageF != "")
 		{
-			lookforExtension(messageF, ".txt");
+			fileObj.lookforExtension(messageF, ".txt");
 
 			file.open(messageF);
 			if (file)
@@ -122,7 +58,7 @@ string Interface::getMessage()
 					message += "\n";
 				}
 				message.resize(message.size() - 1);
-				
+
 				//jesli pusty
 				if (message == "")
 				{
@@ -131,27 +67,30 @@ string Interface::getMessage()
 					file.close();
 				}
 				//jesli nie jest pusty, zwraca
-				else
+				else {
+					file.close();
 					return message;
+				}
 			}
 			//jesli nie ma takiego pliku
 			else
 				rep++;
-		//jesli ktos nie podal nazwy
+			//jesli ktos nie podal nazwy
 		}
-		else 
+		else
 			rep++;
-			
-		
-	}
 
+
+	}
+	
 	//jesli nie znalazl kilka razy
-	if (message == "" && rep == 3)
+	if (message == "" && rep == 5)
 	{
+		file.close();
 		cerr << "Blad otwierania pliku. Program zakonczy dzialanie." << endl;
-		system("pause");
 		exit(1);
 	}
+
 }
 
 //----------------------------------------
@@ -159,7 +98,7 @@ string Interface::getMessage()
 string Interface::getPassword()
 {
 	string password = "";
-	rep = 0;
+	int rep = 0;
 
 	while (password == "" && rep < 3)
 	{
@@ -184,18 +123,19 @@ string Interface::getPassword()
 char *Interface::getImage(int bMessageSize)
 {
 	string bitM = "";
-	rep = 0;
+	int rep = 0;
 	
 	//wyszukiwanie bmp w folderze
-	filesList("*.bmp");
-
-	while (rep < 3)
+	fileObj.filesList("*.bmp");
+	list = fileObj.returnList();
+	
+	while (rep < 5)
 	{
-		
+
 		cout << endl << "Podaj nazwe pliku bmp:" << endl << "-> ";
 		cin >> bitM; cout << endl;
-		
-		lookforExtension(bitM, ".bmp");
+
+		fileObj.lookforExtension(bitM, ".bmp");
 
 		//sprawdzanie czy taki plik znajduje sie w folderze
 		for (size_t i = 0; i < list.size(); i++)
@@ -203,11 +143,10 @@ char *Interface::getImage(int bMessageSize)
 			//jesli jest
 			if (list[i] == bitM)
 			{
-				g_img = new char[bitM.length() + 1];
-				strcpy(g_img, bitM.c_str());
+				char *g_img = converObj.stringToChar(bitM);
 				
-				if (bMessageSize) {
-					/*Sprawdza czy bmp ma wystarczaj¹co pikseli*/
+					if (bMessageSize) {
+					/*Sprawdza czy bmp ma wystarczajšco pikseli*/
 					if (!imgObj.isMessageFittedIn(bMessageSize, g_img)) {
 						cout << "Wybrany plik bmp jest za maly by pomiescic zadana wiadomosc!" << endl;
 						delete[] g_img;
@@ -226,7 +165,7 @@ char *Interface::getImage(int bMessageSize)
 		rep++;
 	}
 
-	if (rep == 3)
+	if (rep == 5)
 	{
 		cerr << "Nie wskazales zadnego z plikow .bmp. Program zakonczy dzialanie." << endl;
 		system("pause");
@@ -235,12 +174,13 @@ char *Interface::getImage(int bMessageSize)
 }
 
 //----------------------------------------
-Interface::Interface(Image &im):imgObj(im),rep(0),g_img(nullptr)
+
+Interface::Interface(Image &im,File &file_,Conversion &conver) :imgObj(im),fileObj(file_),converObj(conver),g_img(nullptr)
 {}
 
 //----------------------------------------
 Interface::~Interface()
 {
 	delete[] g_img;
-	file.close();
+	
 }
